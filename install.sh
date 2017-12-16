@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Dependencies
-sudo apt-get update && sudo apt-get dist-upgrade
-sudo apt-get install
+sudo apt-get update && sudo apt-get -y dist-upgrade
+sudo apt-get -y install \
 	bash-completion \
 	git \
 	vim \
