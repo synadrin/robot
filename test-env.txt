@@ -1,6 +1,7 @@
 - Debian
 - Packages:
 	- bash-completion
+	- git
 	- vim
 	- python3
 	- python3-pip
