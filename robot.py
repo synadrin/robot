@@ -228,8 +228,8 @@ class QuestGame(object):
 if __name__ == "__main__":
 	pygame.init()
 	pygame.font.init()
-	screen = init_screen(800, 600)
-	pygame.display.set_caption('Robie the Robot')
+	screen = init_screen(DISPLAY_WIDTH, DISPLAY_HEIGHT)
+	pygame.display.set_caption(DISPLAY_NAME)
 
 	try:
 		game = QuestGame()
