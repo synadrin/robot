@@ -1,0 +1,23 @@
+- Debian
+- Packages:
+	- bash-completion
+	- vim
+	- python3
+	- python3-pip
+	- openssh-server
+	- xorg
+- Python Pip:
+	- `python3 -m pip install --user pytmx pygame pyscroll`
+- Xorg:
+	- `#echo "pgrep 'tmux|startx' || startx" >> ~/.profile`
+	- ~/.xinitrc:
+		```
+		#!/bin/sh
+
+		exec /usr/local/bin/robot/run.sh
+		```
+- Auto-login:
+	- `sudoedit /lib/systemd/system/getty@.service`
+	- Change  
+	`ExecStart=-/sbin/agetty --noclear %I $TERM`  
+	to `ExecStart=-/sbin/agetty --noclear -a pi %I $TERM`
