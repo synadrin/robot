@@ -6,15 +6,18 @@ sudo apt-get -y install \
 	bash-completion \
 	git \
 	vim \
-	libsdl2-dev \
 	python3 \
 	python3-pip \
+	python3-pygame \
 	openssh-server \
 	xorg
 
+# Start OpenSSH
+sudo systemctl enable ssh.service
+sudo systemctl start ssh.service
+
 # Python modules
-python3 -m pip install --user \
-	pygame \
+sudo python3 -m pip install \
 	pytmx \
 	pyscroll
 
