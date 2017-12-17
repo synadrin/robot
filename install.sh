@@ -6,6 +6,7 @@ sudo apt-get -y install \
 	bash-completion \
 	git \
 	vim \
+	libsdl2-dev \
 	python3 \
 	python3-pip \
 	openssh-server \
