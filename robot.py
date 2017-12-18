@@ -52,7 +52,6 @@ class Hero(pygame.sprite.Sprite):
 			'robie-spritesheet.png', (0, 96, 32, 32),
 			3, (0, 255, 0), True, 10
 		)
-		#self.image = load_image('hero.png').convert_alpha()
 		self.image = self._spritesdown.next()
 		self.velocity = [0, 0]
 		self._position = [0, 0]

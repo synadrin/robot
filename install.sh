@@ -8,13 +8,7 @@ sudo apt-get -y install \
 	vim \
 	python3 \
 	python3-pip \
-	python3-pygame \
-	openssh-server \
-	xorg
-
-# Start OpenSSH
-sudo systemctl enable ssh.service
-sudo systemctl start ssh.service
+	python3-pygame
 
 # Python modules
 sudo python3 -m pip install \
@@ -25,13 +19,6 @@ sudo python3 -m pip install \
 sudo mkdir /usr/local/bin/robot
 sudo chown pi:pi /usr/local/bin/robot
 git clone https://github.com/synadrin/robot.git /usr/local/bin/robot
-
-# Xorg
-echo "pgrep 'tmux|startx' || startx" >> ~/.profile
-cat <<-EOF > ~/.xinitrc
-	#!/bin/sh
-	exec /usr/local/bin/robot/run.sh
-EOF
 
 # Auto-login
 cat /lib/systemd/system/getty@.service \
