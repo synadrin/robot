@@ -7,6 +7,6 @@ DISPLAY_NAME = 'Robie the Robot'
 DISPLAY_FBDEV = '/dev/fb0'
 
 HERO_MOVE_SPEED = 200  # pixels per second
-HERO_SPRITESHEET = 'hero2.png'
+HERO_SPRITESHEET = 'robie-spritesheet.png'
 
 MAP_FILENAME = 'grasslands.tmx'

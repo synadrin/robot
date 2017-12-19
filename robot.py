@@ -35,7 +35,7 @@ class Hero(pygame.sprite.Sprite):
 
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
-		self._spritessheet = spritesheet.spritesheet('robie-spritesheet.png')
+		self._spritessheet = spritesheet.spritesheet(HERO_SPRITESHEET)
 		self._spritesdown = spritestripanim.spritestripanim(
 			'robie-spritesheet.png', (0, 0, 32, 32),
 			3, (0, 255, 0), True, 10
