@@ -21,7 +21,7 @@ class pyscope:
 			pygame.display.set_caption(DISPLAY_NAME)
 		
 		else:
-			#os.putenv('SDL_FBDEV', DISPLAY_FBDEV)
+			os.putenv('SDL_FBDEV', DISPLAY_FBDEV)
 			# Check which frame buffer drivers are available
 			# Start with fbcon since directfb hangs with composite output
 			drivers = ['fbcon', 'directfb', 'svgalib']
