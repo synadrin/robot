@@ -8,6 +8,10 @@ from constants import *
 class pyscope:
 	screen = None;
 	
+	def resize(self, width, height):
+		self.screen = pygame.display.set_mode(
+			(width, height), pygame.RESIZABLE)
+
 	def __init__(self):
 		"Ininitializes a new pygame screen using the framebuffer"
 		# Based on "Python GUI in Linux frame buffer"
@@ -15,9 +19,7 @@ class pyscope:
 		display = os.getenv('DISPLAY')
 		if display:
 			print("Display: {0}".format(display))
-			self.screen = pygame.display.set_mode(
-				(DISPLAY_WIDTH, DISPLAY_HEIGHT),
-				pygame.RESIZABLE)
+			self.resize(DISPLAY_WIDTH, DISPLAY_HEIGHT)
 			pygame.display.set_caption(DISPLAY_NAME)
 		
 		else:
