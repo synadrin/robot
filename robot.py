@@ -14,6 +14,8 @@ from pyscroll.group import PyscrollGroup
 import spritesheet
 import spritestripanim
 
+import pyscope
+
 
 class Hero(pygame.sprite.Sprite):
 	""" Our Hero
@@ -110,7 +112,8 @@ class QuestGame(object):
 		map_data = pyscroll.data.TiledMapData(tmx_data)
 
 		# create new renderer (camera)
-		self.map_layer = pyscroll.BufferedRenderer(map_data, screen.get_size(), clamp_camera=True, tall_sprites=1)
+		self.map_layer = pyscroll.BufferedRenderer(map_data,
+			scope.screen.get_size(), clamp_camera=True, tall_sprites=1)
 		self.map_layer.zoom = 2
 
 		# pyscroll supports layered rendering.  our map has 3 'under' layers
@@ -163,7 +166,7 @@ class QuestGame(object):
 
 			# this will be handled if the window is resized
 			elif event.type == VIDEORESIZE:
-				init_screen(event.w, event.h)
+				scope.resize(event.w, event.h)
 				self.map_layer.set_size((event.w, event.h))
 
 			event = poll()
@@ -217,7 +220,7 @@ class QuestGame(object):
 
 				self.handle_input()
 				self.update(dt)
-				self.draw(screen)
+				self.draw(scope.screen)
 				pygame.display.flip()
 
 		except KeyboardInterrupt:
@@ -227,7 +230,7 @@ class QuestGame(object):
 if __name__ == "__main__":
 	pygame.init()
 	pygame.font.init()
-	screen = init_screen(DISPLAY_WIDTH, DISPLAY_HEIGHT)
+	scope = pyscope.pyscope()
 	pygame.display.set_caption(DISPLAY_NAME)
 
 	try:

@@ -66,7 +66,9 @@ class pyscope:
 		# Update the display
 		pygame.display.update()
  
-# Create an instance of the PyScope class
-scope = pyscope()
-scope.test()
-time.sleep(10)
+
+if __name__ == '__main__':
+	# Create an instance of the PyScope class
+	scope = pyscope()
+	scope.test()
+	time.sleep(10)
