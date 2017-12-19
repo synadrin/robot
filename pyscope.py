@@ -12,7 +12,7 @@ class pyscope:
 		"Ininitializes a new pygame screen using the framebuffer"
 		# Based on "Python GUI in Linux frame buffer"
 		# http://www.karoltomala.com/blog/?p=679
-		display = os.getenv("DISPLAY")
+		display = os.getenv('DISPLAY')
 		if display:
 			print("Display: {0}".format(display))
 			self.screen = pygame.display.set_mode(
@@ -21,6 +21,7 @@ class pyscope:
 			pygame.display.set_caption(DISPLAY_NAME)
 		
 		else:
+			#os.putenv('SDL_FBDEV', DISPLAY_FBDEV)
 			# Check which frame buffer drivers are available
 			# Start with fbcon since directfb hangs with composite output
 			drivers = ['fbcon', 'directfb', 'svgalib']
@@ -46,6 +47,8 @@ class pyscope:
 
 		# Clear the screen to start
 		self.screen.fill((0, 0, 0))		
+		# Disable mouse
+		pygame.mouse.set_visible(False)
 		# Initialise font support
 		pygame.font.init()
 		# Render the screen
