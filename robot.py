@@ -12,7 +12,6 @@ import pyscroll.data
 from pyscroll.group import PyscrollGroup
 
 import spritesheet
-import spritestripanim
 
 import pyscope
 
@@ -38,20 +37,20 @@ class Hero(pygame.sprite.Sprite):
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
 		self._spritessheet = spritesheet.spritesheet(HERO_SPRITESHEET)
-		self._spritesdown = spritestripanim.spritestripanim(
-			'robie-spritesheet.png', (0, 0, 32, 32),
+		self._spritesdown = spritesheet.spritestripanim(
+			HERO_SPRITESHEET, (0, 0, 32, 32),
 			4, (0, 255, 0), True, HERO_MOVE_SPEED / 10
 		)
-		self._spritesleft = spritestripanim.spritestripanim(
-			'robie-spritesheet.png', (0, 32, 32, 32),
+		self._spritesleft = spritesheet.spritestripanim(
+			HERO_SPRITESHEET, (0, 32, 32, 32),
 			4, (0, 255, 0), True, HERO_MOVE_SPEED / 10
 		)
-		self._spritesright = spritestripanim.spritestripanim(
-			'robie-spritesheet.png', (0, 64, 32, 32),
+		self._spritesright = spritesheet.spritestripanim(
+			HERO_SPRITESHEET, (0, 64, 32, 32),
 			4, (0, 255, 0), True, HERO_MOVE_SPEED / 10
 		)
-		self._spritesup = spritestripanim.spritestripanim(
-			'robie-spritesheet.png', (0, 96, 32, 32),
+		self._spritesup = spritesheet.spritestripanim(
+			HERO_SPRITESHEET, (0, 96, 32, 32),
 			4, (0, 255, 0), True, HERO_MOVE_SPEED / 10
 		)
 		self.image = self._spritesdown.next()
