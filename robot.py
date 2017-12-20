@@ -11,76 +11,9 @@ import pyscroll
 import pyscroll.data
 from pyscroll.group import PyscrollGroup
 
-import spritesheet
-
 import pyscope
 
-
-class Hero(pygame.sprite.Sprite):
-	""" Our Hero
-
-	The Hero has three collision rects, one for the whole sprite "rect" and
-	"old_rect", and another to check collisions with walls, called "feet".
-
-	The position list is used because pygame rects are inaccurate for
-	positioning sprites; because the values they get are 'rounded down'
-	as integers, the sprite would move faster moving left or up.
-
-	Feet is 1/2 as wide as the normal rect, and 8 pixels tall.  This size size
-	allows the top of the sprite to overlap walls.  The feet rect is used for
-	collisions, while the 'rect' rect is used for drawing.
-
-	There is also an old_rect that is used to reposition the sprite if it
-	collides with level walls.
-	"""
-
-	def __init__(self):
-		pygame.sprite.Sprite.__init__(self)
-		self._spritessheet = spritesheet.spritesheet(HERO_SPRITESHEET)
-		self._spritesdown = spritesheet.spritestripanim(
-			HERO_SPRITESHEET, (0, 0, 32, 32),
-			4, (0, 255, 0), True, HERO_MOVE_SPEED / 10
-		)
-		self._spritesleft = spritesheet.spritestripanim(
-			HERO_SPRITESHEET, (0, 32, 32, 32),
-			4, (0, 255, 0), True, HERO_MOVE_SPEED / 10
-		)
-		self._spritesright = spritesheet.spritestripanim(
-			HERO_SPRITESHEET, (0, 64, 32, 32),
-			4, (0, 255, 0), True, HERO_MOVE_SPEED / 10
-		)
-		self._spritesup = spritesheet.spritestripanim(
-			HERO_SPRITESHEET, (0, 96, 32, 32),
-			4, (0, 255, 0), True, HERO_MOVE_SPEED / 10
-		)
-		self.image = self._spritesdown.next()
-		self.velocity = [0, 0]
-		self._position = [0, 0]
-		self._old_position = self.position
-		self.rect = self.image.get_rect()
-		self.feet = pygame.Rect(0, 0, self.rect.width * .5, 8)
-
-	@property
-	def position(self):
-		return list(self._position)
-
-	@position.setter
-	def position(self, value):
-		self._position = list(value)
-
-	def update(self, dt):
-		self._old_position = self._position[:]
-		self._position[0] += self.velocity[0] * dt
-		self._position[1] += self.velocity[1] * dt
-		self.rect.topleft = self._position
-		self.feet.midbottom = self.rect.midbottom
-
-	def move_back(self, dt):
-		""" If called after an update, the sprite can move back
-		"""
-		self._position = self._old_position
-		self.rect.topleft = self._position
-		self.feet.midbottom = self.rect.midbottom
+import character
 
 
 class QuestGame(object):
@@ -121,7 +54,8 @@ class QuestGame(object):
 		# layer for sprites as 2
 		self.group = PyscrollGroup(map_layer=self.map_layer, default_layer=2)
 
-		self.hero = Hero()
+		self.hero = character.character(HERO_SPRITESHEET,
+			SPRITE_WIDTH, SPRITE_HEIGHT, HERO_MOVE_SPEED)
 
 		# put the hero in the center of the map
 		self.hero.position = self.map_layer.map_rect.center
@@ -174,22 +108,18 @@ class QuestGame(object):
 		# but is much easier to use.
 		pressed = pygame.key.get_pressed()
 		if pressed[K_UP]:
-			self.hero.velocity[1] = -HERO_MOVE_SPEED
-			self.hero.image = self.hero._spritesup.next()
+			self.hero.move_up()
 		elif pressed[K_DOWN]:
-			self.hero.velocity[1] = HERO_MOVE_SPEED
-			self.hero.image = self.hero._spritesdown.next()
+			self.hero.move_down()
 		else:
-			self.hero.velocity[1] = 0
+			self.hero.stop_moving_vertical()
 
 		if pressed[K_LEFT]:
-			self.hero.velocity[0] = -HERO_MOVE_SPEED
-			self.hero.image = self.hero._spritesleft.next()
+			self.hero.move_left()
 		elif pressed[K_RIGHT]:
-			self.hero.velocity[0] = HERO_MOVE_SPEED
-			self.hero.image = self.hero._spritesright.next()
+			self.hero.move_right()
 		else:
-			self.hero.velocity[0] = 0
+			self.hero.stop_moving_horizontal()
 
 	def update(self, dt):
 		""" Tasks that occur over time should be handled here
