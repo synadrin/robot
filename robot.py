@@ -36,9 +36,10 @@ class QuestGame(object):
 		# setup level geometry with simple pygame rects, loaded from pytmx
 		self.walls = list()
 		for object in tmx_data.objects:
-			self.walls.append(pygame.Rect(
-				object.x, object.y,
-				object.width, object.height))
+			if object.name != 'player_start':
+				self.walls.append(pygame.Rect(
+					object.x, object.y,
+					object.width, object.height))
 
 		# create new data source for pyscroll
 		map_data = pyscroll.data.TiledMapData(tmx_data)
@@ -57,10 +58,11 @@ class QuestGame(object):
 		self.hero = character.character(HERO_SPRITESHEET,
 			SPRITE_WIDTH, SPRITE_HEIGHT, HERO_MOVE_SPEED)
 
-		# put the hero in the center of the map
-		self.hero.position = self.map_layer.map_rect.center
-		self.hero._position[0] += 200
-		self.hero._position[1] += 400
+		# put the hero in tile in the "events" layer with the "start" property
+		player_start = tmx_data.get_object_by_name('player_start')
+		self.hero.position = [player_start.x, player_start.y]
+		self.hero._position[0] = player_start.x
+		self.hero._position[1] = player_start.y
 
 		# add our hero to the group
 		self.group.add(self.hero)
