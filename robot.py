@@ -58,11 +58,9 @@ class QuestGame(object):
 		self.hero = character.character(HERO_SPRITESHEET,
 			SPRITE_WIDTH, SPRITE_HEIGHT, HERO_MOVE_SPEED)
 
-		# put the hero in tile in the "events" layer with the "start" property
+		# put the hero in tile named "player_start"
 		player_start = tmx_data.get_object_by_name('player_start')
 		self.hero.position = [player_start.x, player_start.y]
-		self.hero._position[0] = player_start.x
-		self.hero._position[1] = player_start.y
 
 		# add our hero to the group
 		self.group.add(self.hero)
