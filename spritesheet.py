@@ -6,6 +6,7 @@
 # Note: When calling images_at the rect is the format:
 # (x, y, x + offset, y + offset)
 
+import math
 import pygame
 import functions
 
@@ -42,6 +43,16 @@ class spritesheet(object):
 		tups = [(rect[0]+rect[2]*x, rect[1], rect[2], rect[3])
 				for x in range(image_count)]
 		return self.images_at(tups, colorkey)
+
+	def load_all(self, rect, colorkey = None):
+		sheetWidth = math.trunc(self.sheet.get_width() / rect[2])
+		sheetHeight = math.trunc(self.sheet.get_height() / rect[3])
+		rects = []
+		for i in range(sheetWidth * sheetHeight):
+			x = i % sheetWidth * rect[2]
+			y = math.trunc(i / sheetWidth) * rect[3]
+			rects.append((x, y, rect[2], rect[3]))
+		return self.images_at(rects, colorkey)
 
 
 class spritestripanim(object):
