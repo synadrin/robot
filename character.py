@@ -1,6 +1,15 @@
 from constants import *
+from enum import Enum
 import pygame
 import spritesheet
+
+
+class direction(Enum):
+	UP = 1
+	DOWN = 2
+	RIGHT = 4
+	LEFT = 8
+
 
 class character(pygame.sprite.Sprite):
 	""" Character
@@ -23,6 +32,7 @@ class character(pygame.sprite.Sprite):
 	def __init__(self, filename, width, height, speed):
 		pygame.sprite.Sprite.__init__(self)
 		self._speed = speed
+		self._direction = direction.DOWN
 
 		self._spritesdown = spritesheet.spritestripanim(
 			filename, (0, 0, width, height),
@@ -75,10 +85,12 @@ class character(pygame.sprite.Sprite):
 	def move_up(self):
 		self.velocity[1] = -self._speed
 		self.image = self._spritesup.next()
+		self._direction = direction.UP
 
 	def move_down(self):
 		self.velocity[1] = self._speed
 		self.image = self._spritesdown.next()
+		self._direction = direction.DOWN
 
 	def stop_moving_horizontal(self):
 		self.velocity[0] = 0
@@ -86,7 +98,9 @@ class character(pygame.sprite.Sprite):
 	def move_left(self):
 		self.velocity[0] = -self._speed
 		self.image = self._spritesleft.next()
+		self._direction = direction.LEFT
 	
 	def move_right(self):
 		self.velocity[0] = self._speed
 		self.image = self._spritesright.next()
+		self._direction = direction.RIGHT
