@@ -1,3 +1,4 @@
+from constants import *
 import pygame
 import spritesheet
 
@@ -25,19 +26,19 @@ class character(pygame.sprite.Sprite):
 
 		self._spritesdown = spritesheet.spritestripanim(
 			filename, (0, 0, width, height),
-			4, (0, 255, 0), True, speed / 10
+			4, ALPHA_COLOUR, True, speed / 10
 		)
 		self._spritesleft = spritesheet.spritestripanim(
 			filename, (0, height, width, height),
-			4, (0, 255, 0), True, speed / 10
+			4, ALPHA_COLOUR, True, speed / 10
 		)
 		self._spritesright = spritesheet.spritestripanim(
 			filename, (0, 2 * height, width, height),
-			4, (0, 255, 0), True, speed / 10
+			4, ALPHA_COLOUR, True, speed / 10
 		)
 		self._spritesup = spritesheet.spritestripanim(
 			filename, (0, 3 * height, width, height),
-			4, (0, 255, 0), True, speed / 10
+			4, ALPHA_COLOUR, True, speed / 10
 		)
 		self.image = self._spritesdown.next()
 		self.velocity = [0, 0]

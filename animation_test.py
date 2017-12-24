@@ -1,3 +1,4 @@
+from constants import *
 import pygame
 import pyscope
 import spritesheet
@@ -8,6 +9,8 @@ SPRITE_WIDTH = 320
 SPRITE_HEIGHT = 320
 FRAMES = [
 	[0, 2],
+	[1, 0.1],
+	[0, 1.5],
 	[1, 0.1],
 	[0, 1.5],
 	[1, 0.1],
@@ -36,7 +39,7 @@ class animated_sprite(pygame.sprite.Sprite):
 		self._spritesheet = spritesheet.spritesheet(filename)
 		self._frames = self._spritesheet.load_all(
 			(0, 0, width, height),
-			(0, 255, 0)
+			ALPHA_COLOUR
 			)
 
 		self._currentFrameIndex = 0;
