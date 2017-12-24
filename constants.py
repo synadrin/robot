@@ -10,5 +10,6 @@ HERO_SPRITESHEET = 'robie-spritesheet.png'
 HERO_MOVE_SPEED = 200  # pixels per second
 SPRITE_WIDTH = 32
 SPRITE_HEIGHT = 32
+ALPHA_COLOUR = (0, 255, 0)
 
 MAP_FILENAME = 'grasslands.tmx'
