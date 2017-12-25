@@ -1,0 +1,9 @@
+[Unit]
+Description=Robot Game
+
+[Service]
+ExecStart=/usr/local/bin/robot/run.sh
+Type=idle
+
+[Install]
+WantedBy=multi-user.target
