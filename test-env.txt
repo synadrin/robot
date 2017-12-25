@@ -9,51 +9,8 @@
 	- Software:
 		- `standard system utilities`
 
-3. Install software packages:
+3. Run install script:
 
 	```bash
-	sudo apt-get update && sudo apt-get -y dist-upgrade
-	sudo apt-get -y install \
-		bash-completion \
-		git \
-		vim \
-		python3 \
-		python3-pip
-	```
-
-4. Install the Guest Additions  
-   (https://virtualboxes.org/doc/installing-guest-additions-on-debian/)
-
-	```bash
-	sudo apt-get -y install build-essential module-assistant
-	sudo m-a prepare
-	# Insert "Guest Additions CD image"
-	sudo mount /media/cdrom
-	sudo sh /media/cdrom/VBoxLinuxAdditions.run
-	sudo umount /media/cdrom
-	sudo shutdown -r now
-	```
-
-5. Install Python modules:
-
-	```bash
-	sudo python3 -m pip install pygame pytmx pyscroll
-	```
-
-6. Clone Git project:
-
-	```bash
-	sudo mkdir /usr/local/bin/robot
-	sudo chown pi:pi /usr/local/bin/robot
-	git clone https://github.com/synadrin/robot.git /usr/local/bin/robot
-	```
-
-7. Setup auto-login:
-
-	```bash
-	cat /lib/systemd/system/getty@.service \
-		| sed -e 's/ExecStart=-\/sbin\/agetty --noclear %I $TERM/ExecStart=-\/sbin\/agetty --noclear -a pi %I $TERM/;' \
-		> /tmp/newgetty
-	sudo cp /tmp/newgetty /lib/systemd/system/getty@.service
-	rm /tmp/newgetty
+	install.sh vm
 	```
