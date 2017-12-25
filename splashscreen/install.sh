@@ -13,5 +13,7 @@ cp "${localDir}/splashscreen.service" \
 echo "Installing: splash.png"
 cp "${localDir}/splash.png" /opt/splash.png
 
+echo "Enabling: splashscreen.service"
+systemctl enable splashscreen.service
 echo "Disabling: login prompt"
 systemctl disable getty@tty1
