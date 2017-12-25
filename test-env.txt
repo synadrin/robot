@@ -12,5 +12,5 @@
 3. Run install script:
 
 	```bash
-	install.sh vm
+	sudo install.sh vm
 	```

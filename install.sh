@@ -38,8 +38,8 @@ function install_software()
 
 function install_services()
 {
-	"${localDir}/splashscreen/install.sh"
-	"${localDir}/robot-game/install.sh"
+	sh "${localDir}/splashscreen/install.sh"
+	sh "${localDir}/robot-game/install.sh"
 }
 
 function install_python_modules()
