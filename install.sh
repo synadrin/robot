@@ -3,6 +3,7 @@
 LOCAL_USER=pi
 LOCAL_GROUP=pi
 localDir=$(dirname $(realpath "${0}"))
+robotDir=/usr/local/bin/robot
 OS=$(cat /etc/os-release)
 
 function show_help()
@@ -38,8 +39,8 @@ function install_software()
 
 function install_services()
 {
-	sh "${localDir}/splashscreen/install.sh"
-	sh "${localDir}/robot-game/install.sh"
+	"${robotDir}/splashscreen/install.sh"
+	"${robotDir}/robot-game/install.sh"
 }
 
 function install_python_modules()
@@ -63,7 +64,6 @@ function install_virtualbox_guest_additions()
 
 function clone_project()
 {
-	robotDir=/usr/local/bin/robot
 	mkdir -p "${robotDir}" > /dev/null
 	chown "${LOCAL_USER}:${LOCAL_GROUP}" "${robotDir}"
 	sudo -u "${LOCAL_USER}" \
@@ -74,16 +74,16 @@ function clone_project()
 case "${1}" in
 	vm)
 		install_software vm
-		install_services
 		install_python_modules
 		install_virtualbox_guest_additions
 		clone_project
+		install_services
 		;;
 	rpi)
 		install_software rpi
-		install_services
 		install_python_modules
 		clone_project
+		install_services
 		;;
 	*)
 		show_help
