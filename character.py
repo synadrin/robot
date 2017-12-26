@@ -21,7 +21,7 @@ class character(pygame.sprite.Sprite):
 	positioning sprites; because the values they get are 'rounded down'
 	as integers, the sprite would move faster moving left or up.
 
-	Feet is 1/2 as wide as the normal rect, and 8 pixels tall.  This size size
+	Feet is 1/2 as wide as the normal rect, and 1/4 as tall.  This size size
 	allows the top of the sprite to overlap walls.  The feet rect is used for
 	collisions, while the 'rect' rect is used for drawing.
 
@@ -29,33 +29,33 @@ class character(pygame.sprite.Sprite):
 	collides with level walls.
 	"""
 
-	def __init__(self, filename, width, height, speed):
+	def __init__(self, filename, width, height, speed, frames = 4):
 		pygame.sprite.Sprite.__init__(self)
 		self._speed = speed
 		self._direction = direction.DOWN
 
 		self._spritesdown = spritesheet.spritestripanim(
 			filename, (0, 0, width, height),
-			4, ALPHA_COLOUR, True, speed / 10
+			frames, ALPHA_COLOUR, True, speed / 10
 		)
 		self._spritesleft = spritesheet.spritestripanim(
 			filename, (0, height, width, height),
-			4, ALPHA_COLOUR, True, speed / 10
+			frames, ALPHA_COLOUR, True, speed / 10
 		)
 		self._spritesright = spritesheet.spritestripanim(
 			filename, (0, 2 * height, width, height),
-			4, ALPHA_COLOUR, True, speed / 10
+			frames, ALPHA_COLOUR, True, speed / 10
 		)
 		self._spritesup = spritesheet.spritestripanim(
 			filename, (0, 3 * height, width, height),
-			4, ALPHA_COLOUR, True, speed / 10
+			frames, ALPHA_COLOUR, True, speed / 10
 		)
 		self.image = self._spritesdown.next()
 		self.velocity = [0, 0]
 		self._position = [0, 0]
 		self._old_position = self.position
 		self.rect = self.image.get_rect()
-		self.feet = pygame.Rect(0, 0, self.rect.width * .5, 8)
+		self.feet = pygame.Rect(0, 0, self.rect.width * .5, self.rect.height / 4)
 
 	@property
 	def position(self):
