@@ -1,5 +1,6 @@
 from constants import *
 from enum import Enum
+import math
 import pygame
 import spritesheet
 
@@ -34,21 +35,22 @@ class character(pygame.sprite.Sprite):
         self._speed = speed
         self._direction = direction.DOWN
 
+        animation_speed = (HERO_MOVE_SPEED / speed) * HERO_ANIMATION_SPEED
         self._spritesdown = spritesheet.spritestripanim(
             filename, (0, 0, width, height),
-            frames, ALPHA_COLOUR, True, speed / 10
+            frames, ALPHA_COLOUR, True, animation_speed
         )
         self._spritesleft = spritesheet.spritestripanim(
             filename, (0, height, width, height),
-            frames, ALPHA_COLOUR, True, speed / 10
+            frames, ALPHA_COLOUR, True, animation_speed
         )
         self._spritesright = spritesheet.spritestripanim(
             filename, (0, 2 * height, width, height),
-            frames, ALPHA_COLOUR, True, speed / 10
+            frames, ALPHA_COLOUR, True, animation_speed
         )
         self._spritesup = spritesheet.spritestripanim(
             filename, (0, 3 * height, width, height),
-            frames, ALPHA_COLOUR, True, speed / 10
+            frames, ALPHA_COLOUR, True, animation_speed
         )
         self.image = self._spritesdown.next()
         self.velocity = [0, 0]
@@ -104,3 +106,51 @@ class character(pygame.sprite.Sprite):
         self.velocity[0] = self._speed
         self.image = self._spritesright.next()
         self._direction = direction.RIGHT
+
+
+class npc(character):
+    """NPC (Non-Player Character)
+    """
+
+    def __init__(self, filename, width, height, speed, frames = 4):
+        super().__init__(filename, width, height, speed, frames)
+        self._origin = [26 * 32, 35 * 32]
+        self._target = [30 * 32, 36 * 32]
+        self._returning = False
+        self._currentTarget = self._target
+        self._threshold = 2
+        self.position = self._origin[0], self._origin[1]
+
+    def move_toward(self, targetPosition):
+        if math.fabs(targetPosition[0] - self.position[0]) > self._threshold:
+            self.stop_moving_vertical()
+            if targetPosition[0] > self.position[0]:
+                self.move_right()
+            else:
+                self.move_left()
+        elif math.fabs(targetPosition[1] - self.position[1]) > self._threshold:
+            self.stop_moving_horizontal()
+            if targetPosition[1] > self.position[1]:
+                self.move_down()
+            else:
+                self.move_up()
+
+    def update(self, dt):
+        self.move_toward(self._currentTarget)
+        super().update(dt)
+        deltaX = self.position[0] - self._old_position[0]
+        deltaY = self.position[1] - self._old_position[1]
+        targetXHit = False
+        targetYHit = False
+        if math.fabs(self.position[0] - self._currentTarget[0]) < self._threshold:
+            self.position[0] = self._currentTarget[0]
+            targetXHit = True
+        if math.fabs(self.position[1] - self._currentTarget[1]) < self._threshold:
+            self.position[1] = self._currentTarget[1]
+            targetYHit = True
+        if targetXHit and targetYHit:
+            self._returning = not self._returning
+            if self._returning:
+                self._currentTarget = self._origin
+            else:
+                self._currentTarget = self._target

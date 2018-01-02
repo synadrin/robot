@@ -38,6 +38,9 @@ class QuestGame(object):
                 self.walls.append(pygame.Rect(
                     object.x, object.y,
                     object.width, object.height))
+            elif object.type == 'sprite':
+                #TODO: Load sprite by name.
+                print(object.name)
 
         # create new data source for pyscroll
         map_data = pyscroll.data.TiledMapData(tmx_data)
@@ -62,6 +65,11 @@ class QuestGame(object):
 
         # add our hero to the group
         self.group.add(self.hero)
+
+        #TODO: Move loading from above here?
+        # TEST ONLY
+        self.npc_test = character.npc('hero-spritesheet.png', 32, 48, HERO_MOVE_SPEED / 4, 3)
+        self.group.add(self.npc_test)
 
     def draw(self, surface):
 
