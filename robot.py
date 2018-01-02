@@ -68,7 +68,7 @@ class QuestGame(object):
 
         #TODO: Move loading from above here?
         # TEST ONLY
-        self.npc_test = character.npc('hero-spritesheet.png', 32, 48, HERO_MOVE_SPEED / 4, 3)
+        self.npc_test = character.npc('sprite_test')
         self.group.add(self.npc_test)
 
     def draw(self, surface):

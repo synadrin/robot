@@ -1,6 +1,8 @@
 from constants import *
 from enum import Enum
 import math
+import os.path
+import json
 import pygame
 import spritesheet
 
@@ -30,12 +32,14 @@ class character(pygame.sprite.Sprite):
     collides with level walls.
     """
 
-    def __init__(self, filename, width, height, speed, frames = 4):
+    def __init__(self, filename, width, height, move_speed, animation_speed = 0, frames = 4):
         pygame.sprite.Sprite.__init__(self)
-        self._speed = speed
+        self._speed = move_speed
         self._direction = direction.DOWN
 
-        animation_speed = (HERO_MOVE_SPEED / speed) * HERO_ANIMATION_SPEED
+        if animation_speed < 1:
+            animation_speed = (HERO_MOVE_SPEED / move_speed) * HERO_ANIMATION_SPEED
+
         self._spritesdown = spritesheet.spritestripanim(
             filename, (0, 0, width, height),
             frames, ALPHA_COLOUR, True, animation_speed
@@ -112,8 +116,13 @@ class npc(character):
     """NPC (Non-Player Character)
     """
 
-    def __init__(self, filename, width, height, speed, frames = 4):
-        super().__init__(filename, width, height, speed, frames)
+    def __init__(self, filename):
+        with open(os.path.join(RESOURCES_DIR, filename + '.json'), 'r') as f:
+            sprite_info = json.load(f)
+        animation_speed = sprite_info['animation_speed'] if 'animation_speed' in sprite_info else 0
+        frames = sprite_info['frames_per_row'] if 'frames_per_row' in sprite_info else None
+        super().__init__(sprite_info['spritesheet'], sprite_info['sprite_width'],
+            sprite_info['sprite_height'], sprite_info['move_speed'], animation_speed, frames)
         self._origin = [26 * 32, 35 * 32]
         self._target = [30 * 32, 36 * 32]
         self._returning = False
