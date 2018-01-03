@@ -9,6 +9,7 @@ import pyscope
 from constants import *
 from functions import *
 import character
+import event
 
 
 class QuestGame(object):
@@ -55,6 +56,7 @@ class QuestGame(object):
         # setup level geometry with simple pygame rects, loaded from pytmx
         self.walls = list()
         self.npcs = list()
+        self.events = list()
         for object in tmx_data.objects:
             if object.type == 'wall':
                 self.walls.append(pygame.Rect(
@@ -64,9 +66,16 @@ class QuestGame(object):
                 # Load sprite from JSON
                 target_x = int(object.target_x) * tmx_data.tilewidth
                 target_y = int(object.target_y) * tmx_data.tileheight
-                npc = character.npc(object.name, [object.x, object.y], [target_x, target_y])
+                npc = character.npc(
+                    object.name, [object.x, object.y],
+                    [target_x, target_y])
                 self.npcs.append(npc)
                 self.group.add(npc)
+            elif object.type == 'event':
+                self.events.append(event.event(
+                    object.x, object.y,
+                    object.width, object.height,
+                    object.properties))
 
         # List used for displaying lines of text
         self._text_set = []
@@ -125,9 +134,14 @@ class QuestGame(object):
                 elif event.key == K_SPACE:
                     #TODO: Interaction
                     index = self.hero.interaction_rect.collidelist(self.npcs)
+                    # NPC
                     if index > -1:
                         self._text_set.append(self.npcs[index].name + ': '
                             + self.npcs[index].dialogue)
+                    # Events, objects
+                    index = self.hero.interaction_rect.collidelist(self.events)
+                    if index > -1:
+                        self._text_set.append(self.events[index].on_interact)
 
             # this will be handled if the window is resized
             elif event.type == VIDEORESIZE:
