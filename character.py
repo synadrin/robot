@@ -130,6 +130,8 @@ class npc(character):
         self._threshold = 2
         self.position = self._origin[0], self._origin[1]
 
+        self._dialogue = sprite_info['dialogue'] if 'dialogue' in sprite_info else []
+
     def move_toward(self, targetPosition):
         if math.fabs(targetPosition[0] - self.position[0]) > self._threshold:
             self.stop_moving_vertical()
