@@ -68,6 +68,25 @@ class QuestGame(object):
                 self.npcs.append(npc)
                 self.group.add(npc)
 
+        # List used for displaying lines of text
+        self._text_set = []
+
+    def draw_text(self, surface):
+        if self._text_set:
+            vertical_offset = surface.get_height() * (1 - DIALOG_HEIGHT)
+            dialog_box = pygame.Rect(0, vertical_offset, surface.get_width(), 
+                surface.get_height() * DIALOG_HEIGHT)
+            y = vertical_offset + TEXT_SIZE
+            x = TEXT_SIZE
+            font = pygame.font.Font(pygame.font.get_default_font(), TEXT_SIZE)
+
+            pygame.draw.rect(surface, DIALOG_BACKGROUND, dialog_box, 0)
+            pygame.draw.rect(surface, DIALOG_BORDER, dialog_box, DIALOG_BORDER_THICKNESS)
+            for line in self._text_set:
+                text = font.render(line, 1, TEXT_COLOUR, TEXT_BACKGROUND)
+                surface.blit(text, (x, y))
+                y += text.get_height()
+
     def draw(self, surface):
 
         # center the map/screen on our Hero
@@ -75,6 +94,9 @@ class QuestGame(object):
 
         # draw the map and all sprites
         self.group.draw(surface)
+
+        # Draw text
+        self.draw_text(surface)
 
     def handle_input(self):
         """ Handle pygame input events
@@ -104,7 +126,8 @@ class QuestGame(object):
                     #TODO: Interaction
                     index = self.hero.interaction_rect.collidelist(self.npcs)
                     if index > -1:
-                        print(self.npcs[index].dialogue)
+                        self._text_set.append(self.npcs[index].name + ': '
+                            + self.npcs[index].dialogue)
 
             # this will be handled if the window is resized
             elif event.type == VIDEORESIZE:
