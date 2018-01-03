@@ -1,4 +1,6 @@
 # Define configuration variables here
+GAME_VERSION = '0.1a'
+
 RESOURCES_DIR = 'data'
 
 DISPLAY_WIDTH = 800
