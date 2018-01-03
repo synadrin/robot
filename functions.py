@@ -1,6 +1,9 @@
 import os.path
+
 import pygame
+
 from constants import *
+
 
 # simple wrapper to keep the screen resizeable
 def init_screen(width, height):

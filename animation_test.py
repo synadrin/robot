@@ -1,6 +1,7 @@
-from constants import *
 import pygame
 import pyscope
+
+from constants import *
 import spritesheet
 
 

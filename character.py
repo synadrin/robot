@@ -1,9 +1,11 @@
-from constants import *
 from enum import Enum
 import math
 import os.path
 import json
+
 import pygame
+
+from constants import *
 import spritesheet
 
 

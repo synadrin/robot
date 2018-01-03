@@ -1,16 +1,13 @@
-from constants import *
-from functions import *
-
 import pygame
 from pygame.locals import *
 from pytmx.util_pygame import load_pygame
-
 import pyscroll
 import pyscroll.data
 from pyscroll.group import PyscrollGroup
-
 import pyscope
 
+from constants import *
+from functions import *
 import character
 
 

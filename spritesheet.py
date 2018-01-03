@@ -7,8 +7,11 @@
 # (x, y, x + offset, y + offset)
 
 import math
+
 import pygame
+
 import functions
+
 
 class spritesheet(object):
 
