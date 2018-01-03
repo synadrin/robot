@@ -138,10 +138,10 @@ class npc(character):
     """NPC (Non-Player Character)
     """
 
-    def __init__(self, name, origin, target):
-        with open(os.path.join(RESOURCES_DIR, name + '.json'), 'r') as f:
+    def __init__(self, filename, origin, target):
+        with open(os.path.join(RESOURCES_DIR, filename + '.json'), 'r') as f:
             sprite_info = json.load(f)
-        self._name = name
+        self._filename = filename
         animation_speed = sprite_info['animation_speed'] if 'animation_speed' in sprite_info else 0
         frames = sprite_info['frames_per_row'] if 'frames_per_row' in sprite_info else None
         super().__init__(sprite_info['spritesheet'], sprite_info['sprite_width'],
@@ -153,6 +153,7 @@ class npc(character):
         self._threshold = 2
         self.position = self._origin[0], self._origin[1]
 
+        self._name = sprite_info['name'] if 'name' in sprite_info else '?????'
         self._dialogue = sprite_info['dialogue'] if 'dialogue' in sprite_info else []
 
     @property
@@ -161,6 +162,10 @@ class npc(character):
             return random.choice(self._dialogue)
         else:
             return '...'
+
+    @property
+    def name(self):
+        return self._name
 
     def move_toward(self, target_position):
         if math.fabs(target_position[0] - self.position[0]) > self._threshold:
