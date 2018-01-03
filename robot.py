@@ -102,9 +102,9 @@ class QuestGame(object):
 
                 elif event.key == K_SPACE:
                     #TODO: Interaction
-                    index = self.hero.interaction_rect.collidelist(self.walls)
+                    index = self.hero.interaction_rect.collidelist(self.npcs)
                     if index > -1:
-                        print(self.walls[index])
+                        print(self.npcs[index].dialogue)
 
             # this will be handled if the window is resized
             elif event.type == VIDEORESIZE:
