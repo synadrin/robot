@@ -62,6 +62,7 @@ class character(pygame.sprite.Sprite):
         self._old_position = self.position
         self.rect = self.image.get_rect()
         self.feet = pygame.Rect(0, 0, self.rect.width * .5, self.rect.height / 4)
+        self.interaction_rect = pygame.Rect(0, 0, self.rect.width * 0.5, self.rect.height)
 
     @property
     def position(self):
@@ -71,12 +72,29 @@ class character(pygame.sprite.Sprite):
     def position(self, value):
         self._position = list(value)
 
+    def update_interaction_rect(self):
+        self.interaction_rect.topleft = self._position[:]
+        self.interaction_rect.size = (self.rect.width, self.rect.height)
+        if self._direction == direction.UP:
+            self.interaction_rect.height *= 0.5
+            self.interaction_rect.y -= self.interaction_rect.height
+        elif self._direction == direction.DOWN:
+            self.interaction_rect.height *= 0.5
+            self.interaction_rect.y += self.interaction_rect.height
+        elif self._direction == direction.LEFT:
+            self.interaction_rect.width *= 0.5
+            self.interaction_rect.x -= self.interaction_rect.width
+        elif self._direction == direction.RIGHT:
+            self.interaction_rect.width *= 0.5
+            self.interaction_rect.x += self.interaction_rect.width
+
     def update(self, dt):
         self._old_position = self._position[:]
         self._position[0] += self.velocity[0] * dt
         self._position[1] += self.velocity[1] * dt
         self.rect.topleft = self._position
         self.feet.midbottom = self.rect.midbottom
+        self.update_interaction_rect()
 
     def move_back(self, dt):
         """ If called after an update, the sprite can move back
@@ -84,6 +102,7 @@ class character(pygame.sprite.Sprite):
         self._position = self._old_position
         self.rect.topleft = self._position
         self.feet.midbottom = self.rect.midbottom
+        self.update_interaction_rect()
 
     def stop_moving_vertical(self):
         self.velocity[1] = 0

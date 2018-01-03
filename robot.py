@@ -103,6 +103,12 @@ class QuestGame(object):
                     if value > 0:
                         self.map_layer.zoom = value
 
+                elif event.key == K_SPACE:
+                    #TODO: Interaction
+                    index = self.hero.interaction_rect.collidelist(self.walls)
+                    if index > -1:
+                        print(self.walls[index])
+
             # this will be handled if the window is resized
             elif event.type == VIDEORESIZE:
                 scope.resize(event.w, event.h)
