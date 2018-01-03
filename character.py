@@ -139,7 +139,7 @@ class npc(character):
     """
 
     def __init__(self, filename, origin, target):
-        with open(os.path.join(RESOURCES_DIR, filename + '.json'), 'r') as f:
+        with open(os.path.join(RESOURCES_DIR, 'c_' + filename + '.json'), 'r') as f:
             sprite_info = json.load(f)
         self._filename = filename
         animation_speed = sprite_info['animation_speed'] if 'animation_speed' in sprite_info else 0
