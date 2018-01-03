@@ -57,7 +57,7 @@ class QuestGame(object):
 
         # setup level geometry with simple pygame rects, loaded from pytmx
         self.walls = list()
-        self.sprites = list()
+        self.npcs = list()
         for object in tmx_data.objects:
             if object.type == 'wall':
                 self.walls.append(pygame.Rect(
@@ -68,7 +68,7 @@ class QuestGame(object):
                 targetX = int(object.targetX) * tmx_data.tilewidth
                 targetY = int(object.targetY) * tmx_data.tileheight
                 npc = character.npc(object.name, [object.x, object.y], [targetX, targetY])
-                self.sprites.append(npc)
+                self.npcs.append(npc)
                 self.group.add(npc)
 
     def draw(self, surface):
@@ -138,6 +138,11 @@ class QuestGame(object):
         for sprite in self.group.sprites():
             if sprite.feet.collidelist(self.walls) > -1:
                 sprite.move_back(dt)
+        # Check if NPCs are colliding with the hero
+        for npc in self.npcs:
+            if npc.feet.colliderect(self.hero.feet):
+                npc.move_back(dt)
+                self.hero.move_back(dt)
 
     def run(self):
         """ Run the game loop
