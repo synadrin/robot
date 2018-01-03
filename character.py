@@ -34,7 +34,7 @@ class character(pygame.sprite.Sprite):
     collides with level walls.
     """
 
-    def __init__(self, filename, width, height, move_speed, animation_speed = 0, frames = 4):
+    def __init__(self, filename, width, height, move_speed, animation_speed=0, frames=4):
         pygame.sprite.Sprite.__init__(self)
         self._speed = move_speed
         self._direction = direction.DOWN
@@ -147,42 +147,42 @@ class npc(character):
         self._origin = origin
         self._target = target
         self._returning = False
-        self._currentTarget = self._target
+        self._current_target = self._target
         self._threshold = 2
         self.position = self._origin[0], self._origin[1]
 
         self._dialogue = sprite_info['dialogue'] if 'dialogue' in sprite_info else []
 
-    def move_toward(self, targetPosition):
-        if math.fabs(targetPosition[0] - self.position[0]) > self._threshold:
+    def move_toward(self, target_position):
+        if math.fabs(target_position[0] - self.position[0]) > self._threshold:
             self.stop_moving_vertical()
-            if targetPosition[0] > self.position[0]:
+            if target_position[0] > self.position[0]:
                 self.move_right()
             else:
                 self.move_left()
-        elif math.fabs(targetPosition[1] - self.position[1]) > self._threshold:
+        elif math.fabs(target_position[1] - self.position[1]) > self._threshold:
             self.stop_moving_horizontal()
-            if targetPosition[1] > self.position[1]:
+            if target_position[1] > self.position[1]:
                 self.move_down()
             else:
                 self.move_up()
 
     def update(self, dt):
-        self.move_toward(self._currentTarget)
+        self.move_toward(self._current_target)
         super().update(dt)
-        deltaX = self.position[0] - self._old_position[0]
-        deltaY = self.position[1] - self._old_position[1]
-        targetXHit = False
-        targetYHit = False
-        if math.fabs(self.position[0] - self._currentTarget[0]) < self._threshold:
-            self.position[0] = self._currentTarget[0]
-            targetXHit = True
-        if math.fabs(self.position[1] - self._currentTarget[1]) < self._threshold:
-            self.position[1] = self._currentTarget[1]
-            targetYHit = True
-        if targetXHit and targetYHit:
+        delta_x = self.position[0] - self._old_position[0]
+        delta_y = self.position[1] - self._old_position[1]
+        target_x_hit = False
+        target_y_hit = False
+        if math.fabs(self.position[0] - self._current_target[0]) < self._threshold:
+            self.position[0] = self._current_target[0]
+            target_x_hit = True
+        if math.fabs(self.position[1] - self._current_target[1]) < self._threshold:
+            self.position[1] = self._current_target[1]
+            target_y_hit = True
+        if target_x_hit and target_y_hit:
             self._returning = not self._returning
             if self._returning:
-                self._currentTarget = self._origin
+                self._current_target = self._origin
             else:
-                self._currentTarget = self._target
+                self._current_target = self._target

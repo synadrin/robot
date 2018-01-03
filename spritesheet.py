@@ -48,12 +48,12 @@ class spritesheet(object):
         return self.images_at(tups, colorkey)
 
     def load_all(self, rect, colorkey = None):
-        sheetWidth = math.trunc(self.sheet.get_width() / rect[2])
-        sheetHeight = math.trunc(self.sheet.get_height() / rect[3])
+        sheet_width = math.trunc(self.sheet.get_width() / rect[2])
+        sheet_height = math.trunc(self.sheet.get_height() / rect[3])
         rects = []
-        for i in range(sheetWidth * sheetHeight):
-            x = i % sheetWidth * rect[2]
-            y = math.trunc(i / sheetWidth) * rect[3]
+        for i in range(sheet_width * sheet_height):
+            x = i % sheet_width * rect[2]
+            y = math.trunc(i / sheet_width) * rect[3]
             rects.append((x, y, rect[2], rect[3]))
         return self.images_at(rects, colorkey)
 

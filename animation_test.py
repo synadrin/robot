@@ -43,8 +43,8 @@ class animated_sprite(pygame.sprite.Sprite):
             ALPHA_COLOUR
             )
 
-        self._currentFrameIndex = 0;
-        self.updateFrame()
+        self._current_frame_index = 0;
+        self.update_frame()
 
     @property
     def position(self):
@@ -53,32 +53,32 @@ class animated_sprite(pygame.sprite.Sprite):
     @position.setter
     def position(self, value):
         self._position = list(value)
-        self.updateFrame()
+        self.update_frame()
 
-    def updateFrame(self):
-        self._timeout = FRAMES[self._currentFrameIndex][1]
-        self.image = self._frames[FRAMES[self._currentFrameIndex][0]]
+    def update_frame(self):
+        self._timeout = FRAMES[self._current_frame_index][1]
+        self.image = self._frames[FRAMES[self._current_frame_index][0]]
         self.rect = self.image.get_rect()
         self.rect.x = self.position[0]
         self.rect.y = self.position[1]
         
-    def nextFrame(self):
-        self._currentFrameIndex += 1
-        if self._currentFrameIndex >= len(FRAMES):
-            self._currentFrameIndex = 0
-        self.updateFrame()
+    def next_frame(self):
+        self._current_frame_index += 1
+        if self._current_frame_index >= len(FRAMES):
+            self._current_frame_index = 0
+        self.update_frame()
 
     def update(self, dt):
         while (dt > 0):
-            deltaT = dt
-            if deltaT > self._timeout:
-                deltaT = self._timeout
+            delta_t = dt
+            if delta_t > self._timeout:
+                delta_t = self._timeout
 
-            self._timeout -= deltaT
+            self._timeout -= delta_t
             if self._timeout <= 0:
-                self.nextFrame()
+                self.next_frame()
 
-            dt -= deltaT
+            dt -= delta_t
 
 
 class animation_test:
