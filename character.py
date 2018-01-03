@@ -116,15 +116,15 @@ class npc(character):
     """NPC (Non-Player Character)
     """
 
-    def __init__(self, filename):
+    def __init__(self, filename, origin, target):
         with open(os.path.join(RESOURCES_DIR, filename + '.json'), 'r') as f:
             sprite_info = json.load(f)
         animation_speed = sprite_info['animation_speed'] if 'animation_speed' in sprite_info else 0
         frames = sprite_info['frames_per_row'] if 'frames_per_row' in sprite_info else None
         super().__init__(sprite_info['spritesheet'], sprite_info['sprite_width'],
             sprite_info['sprite_height'], sprite_info['move_speed'], animation_speed, frames)
-        self._origin = [26 * 32, 35 * 32]
-        self._target = [30 * 32, 36 * 32]
+        self._origin = origin
+        self._target = target
         self._returning = False
         self._currentTarget = self._target
         self._threshold = 2

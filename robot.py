@@ -31,17 +31,6 @@ class QuestGame(object):
         # load data from pytmx
         tmx_data = load_pygame(self.filename)
 
-        # setup level geometry with simple pygame rects, loaded from pytmx
-        self.walls = list()
-        for object in tmx_data.objects:
-            if object.type == 'wall':
-                self.walls.append(pygame.Rect(
-                    object.x, object.y,
-                    object.width, object.height))
-            elif object.type == 'sprite':
-                #TODO: Load sprite by name.
-                print(object.name)
-
         # create new data source for pyscroll
         map_data = pyscroll.data.TiledMapData(tmx_data)
 
@@ -66,10 +55,21 @@ class QuestGame(object):
         # add our hero to the group
         self.group.add(self.hero)
 
-        #TODO: Move loading from above here?
-        # TEST ONLY
-        self.npc_test = character.npc('sprite_test')
-        self.group.add(self.npc_test)
+        # setup level geometry with simple pygame rects, loaded from pytmx
+        self.walls = list()
+        self.sprites = list()
+        for object in tmx_data.objects:
+            if object.type == 'wall':
+                self.walls.append(pygame.Rect(
+                    object.x, object.y,
+                    object.width, object.height))
+            elif object.type == 'sprite':
+                # Load sprite from JSON
+                targetX = int(object.targetX) * tmx_data.tilewidth
+                targetY = int(object.targetY) * tmx_data.tileheight
+                npc = character.npc(object.name, [object.x, object.y], [targetX, targetY])
+                self.sprites.append(npc)
+                self.group.add(npc)
 
     def draw(self, surface):
 
