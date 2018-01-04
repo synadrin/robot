@@ -13,7 +13,7 @@ def init_screen(width, height):
 
 # make loading maps a little easier
 def get_map(filename):
-    return os.path.join(RESOURCES_DIR, filename)
+    return os.path.join(RESOURCES_DIR, filename + '.tmx')
 
 
 # make loading images a little easier

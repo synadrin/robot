@@ -12,22 +12,33 @@ import character
 import event
 
 
-class QuestGame(object):
+class robot_game(object):
     """ This class is a basic game.
 
     This class will load data, create a pyscroll group, a hero object.
     It also reads input and moves the Hero around the map.
     Finally, it uses a pyscroll group to render the map and Hero.
     """
-    filename = get_map(MAP_FILENAME)
 
     def __init__(self):
 
         # true while running
         self.running = False
 
+        self.hero = character.character(HERO_SPRITESHEET,
+            SPRITE_WIDTH, SPRITE_HEIGHT, HERO_MOVE_SPEED)
+
+        # List used for displaying lines of text
+        self._text_set = []
+
+        # Load the default map
+        self.load_map(DEFAULT_MAP)
+
+    def load_map(self, name):
+        filename = get_map(name)
+
         # load data from pytmx
-        tmx_data = load_pygame(self.filename)
+        tmx_data = load_pygame(filename)
 
         # create new data source for pyscroll
         map_data = pyscroll.data.TiledMapData(tmx_data)
@@ -42,9 +53,6 @@ class QuestGame(object):
         # since we want the sprite to be on top of layer 1, we set the default
         # layer for sprites as 2
         self.group = PyscrollGroup(map_layer=self.map_layer, default_layer=2)
-
-        self.hero = character.character(HERO_SPRITESHEET,
-            SPRITE_WIDTH, SPRITE_HEIGHT, HERO_MOVE_SPEED)
 
         # put the hero in tile named "player_start"
         player_start = tmx_data.get_object_by_name('player_start')
@@ -76,9 +84,6 @@ class QuestGame(object):
                     object.x, object.y,
                     object.width, object.height,
                     object.properties))
-
-        # List used for displaying lines of text
-        self._text_set = []
 
     def draw_text(self, surface):
         if self._text_set:
@@ -214,7 +219,7 @@ if __name__ == "__main__":
     pygame.display.set_caption(DISPLAY_NAME)
 
     try:
-        game = QuestGame()
+        game = robot_game()
         game.run()
     except:
         pygame.quit()
