@@ -10,7 +10,7 @@ DISPLAY_FBDEV = '/dev/fb0'
 
 HERO_SPRITESHEET = 'robie-spritesheet.png'
 HERO_MOVE_SPEED = 200  # pixels per second
-HERO_ANIMATION_SPEED = 20 # ticks per frame
+HERO_ANIMATION_SPEED = 20  # ticks per frame
 SPRITE_WIDTH = 32
 SPRITE_HEIGHT = 32
 ALPHA_COLOUR = (0, 255, 0)
@@ -23,4 +23,4 @@ TEXT_SIZE = 20
 DIALOG_BORDER = (255, 255, 255)
 DIALOG_BORDER_THICKNESS = 5
 DIALOG_BACKGROUND = (0, 0, 128)
-DIALOG_HEIGHT = 0.4 # Fraction of the screen
+DIALOG_HEIGHT = 0.4  # Fraction of the screen
