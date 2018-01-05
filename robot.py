@@ -75,8 +75,8 @@ class robot_game(object):
                 target_x = int(object.target_x) * tmx_data.tilewidth
                 target_y = int(object.target_y) * tmx_data.tileheight
                 npc = character.npc(
-                    object.name, [object.x, object.y],
-                    [target_x, target_y])
+                    object.name,
+		    [(object.x, object.y), (target_x, target_y)])
                 self.npcs.append(npc)
                 self.group.add(npc)
             elif object.type == 'event':

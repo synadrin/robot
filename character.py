@@ -138,7 +138,7 @@ class npc(character):
     """NPC (Non-Player Character)
     """
 
-    def __init__(self, filename, origin, target):
+    def __init__(self, filename, path):
         with open(os.path.join(RESOURCES_DIR, 'c_' + filename + '.json'), 'r') as f:
             sprite_info = json.load(f)
         self._filename = filename
@@ -146,10 +146,18 @@ class npc(character):
         frames = sprite_info['frames_per_row'] if 'frames_per_row' in sprite_info else None
         super().__init__(sprite_info['spritesheet'], sprite_info['sprite_width'],
             sprite_info['sprite_height'], sprite_info['move_speed'], animation_speed, frames)
-        self._origin = origin
-        self._target = target
-        self._returning = False
-        self._current_target = self._target
+
+        self._path = path
+        # Path with more than one node means the character is moving
+        self._moving = len(self._path) > 1
+        self._path_index = 0
+        self._origin = self._path[self._path_index]
+        if self._moving:
+            self._goal = self._path[-1]
+            self._path_incrementer = 1
+            self._current_goal_index = self._path_index + self._path_incrementer
+        else:
+            self._current_goal_index = 0
         self._threshold = 2
         self.position = self._origin[0], self._origin[1]
 
@@ -167,36 +175,42 @@ class npc(character):
     def name(self):
         return self._name
 
-    def move_toward(self, target_position):
-        if math.fabs(target_position[0] - self.position[0]) > self._threshold:
-            self.stop_moving_vertical()
-            if target_position[0] > self.position[0]:
-                self.move_right()
-            else:
-                self.move_left()
-        elif math.fabs(target_position[1] - self.position[1]) > self._threshold:
-            self.stop_moving_horizontal()
-            if target_position[1] > self.position[1]:
-                self.move_down()
-            else:
-                self.move_up()
+    def move_toward(self, goal):
+        if self._moving:
+            if math.fabs(goal[0] - self.position[0]) > self._threshold:
+                self.stop_moving_vertical()
+                if goal[0] > self.position[0]:
+                    self.move_right()
+                else:
+                    self.move_left()
+            elif math.fabs(goal[1] - self.position[1]) > self._threshold:
+                self.stop_moving_horizontal()
+                if goal[1] > self.position[1]:
+                    self.move_down()
+                else:
+                    self.move_up()
 
     def update(self, dt):
-        self.move_toward(self._current_target)
+        self.move_toward(self._path[self._current_goal_index])
         super().update(dt)
-        delta_x = self.position[0] - self._old_position[0]
-        delta_y = self.position[1] - self._old_position[1]
-        target_x_hit = False
-        target_y_hit = False
-        if math.fabs(self.position[0] - self._current_target[0]) < self._threshold:
-            self.position[0] = self._current_target[0]
-            target_x_hit = True
-        if math.fabs(self.position[1] - self._current_target[1]) < self._threshold:
-            self.position[1] = self._current_target[1]
-            target_y_hit = True
-        if target_x_hit and target_y_hit:
-            self._returning = not self._returning
-            if self._returning:
-                self._current_target = self._origin
-            else:
-                self._current_target = self._target
+
+        if self._moving:
+            delta_x = self.position[0] - self._old_position[0]
+            delta_y = self.position[1] - self._old_position[1]
+            goal_x_hit = False
+            goal_y_hit = False
+            current_goal = self._path[self._current_goal_index]
+            if math.fabs(self.position[0] - current_goal[0]) < self._threshold:
+                self.position[0] = current_goal[0]
+                goal_x_hit = True
+            if math.fabs(self.position[1] - current_goal[1]) < self._threshold:
+                self.position[1] = current_goal[1]
+                goal_y_hit = True
+
+            if goal_x_hit and goal_y_hit:
+                self._path_index = self._current_goal_index
+                next_goal_index = self._path_index + self._path_incrementer
+                if not 0 <= next_goal_index < len(self._path):
+                    self._path_incrementer *= -1
+                    next_goal_index = self._path_index + self._path_incrementer
+                self._current_goal_index = next_goal_index
