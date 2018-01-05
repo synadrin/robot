@@ -92,10 +92,11 @@ class robot_game(object):
                     came_from,
                     (origin_grid_x, origin_grid_y),
                     (target_grid_x, target_grid_y))
+                path = [
+                    (t[0] * tmx_data.tilewidth, t[1] * tmx_data.tileheight)
+                    for t in path]
                 # Load sprite from JSON
-                npc = character.npc(
-                    object.name,
-                    [(object.x, object.y), (target_x, target_y)])
+                npc = character.npc(object.name, path)
                 self.npcs.append(npc)
                 self.group.add(npc)
             elif object.type == 'event':
