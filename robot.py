@@ -10,6 +10,7 @@ from constants import *
 from functions import *
 import character
 import event
+import pathfinding
 
 
 class robot_game(object):
@@ -65,18 +66,36 @@ class robot_game(object):
         self.walls = list()
         self.npcs = list()
         self.events = list()
+        # Also a pathfinding grid
+        self.pathfinding_grid = pathfinding.weighted_grid(
+            tmx_data.width, tmx_data.height)
         for object in tmx_data.objects:
             if object.type == 'wall':
                 self.walls.append(pygame.Rect(
                     object.x, object.y,
                     object.width, object.height))
+                self.pathfinding_grid.walls.append(
+                    (object.x, object.y))
             elif object.type == 'sprite':
+                target_grid_x = int(object.target_x)
+                target_grid_y = int(object.target_y)
+                target_x = target_grid_x * tmx_data.tilewidth
+                target_y = target_grid_y * tmx_data.tileheight
+                origin_grid_x = int(object.x / tmx_data.tilewidth)
+                origin_grid_y = int(object.y / tmx_data.tileheight)
+                # Pathfinding
+                came_from, cost_so_far = pathfinding.a_star_search(
+                    self.pathfinding_grid,
+                    (origin_grid_x, origin_grid_y),
+                    (target_grid_x, target_grid_y))
+                path = pathfinding.reconstruct_path(
+                    came_from,
+                    (origin_grid_x, origin_grid_y),
+                    (target_grid_x, target_grid_y))
                 # Load sprite from JSON
-                target_x = int(object.target_x) * tmx_data.tilewidth
-                target_y = int(object.target_y) * tmx_data.tileheight
                 npc = character.npc(
                     object.name,
-		    [(object.x, object.y), (target_x, target_y)])
+                    [(object.x, object.y), (target_x, target_y)])
                 self.npcs.append(npc)
                 self.group.add(npc)
             elif object.type == 'event':
