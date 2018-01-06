@@ -78,8 +78,15 @@ class robot_game(object):
                 self.walls.append(pygame.Rect(
                     object.x, object.y,
                     object.width, object.height))
-                self.pathfinding_grid.walls.append(
-                    (object.x, object.y))
+                # Add walls to the pathfinding grid
+                grid_x = int(object.x / tmx_data.tilewidth)
+                grid_y = int(object.y / tmx_data.tileheight)
+                grid_width = int(object.width / tmx_data.tilewidth)
+                grid_height = int(object.height / tmx_data.tileheight)
+                for y in range(0, grid_height):
+                    for x in range(0, grid_width):
+                        self.pathfinding_grid.walls.append(
+                            (grid_x + x, grid_y + y))
             elif object.type == 'sprite':
                 # Process NPCs after walls are determined
                 temp_npcs.append(object)
@@ -106,6 +113,7 @@ class robot_game(object):
                 came_from,
                 (origin_grid_x, origin_grid_y),
                 (target_grid_x, target_grid_y))
+            print(path)
             path = [
                 (t[0] * tmx_data.tilewidth, t[1] * tmx_data.tileheight)
                 for t in path]
