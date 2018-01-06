@@ -158,7 +158,7 @@ class npc(character):
             self._current_goal_index = self._path_index + self._path_incrementer
         else:
             self._current_goal_index = 0
-        self._threshold = 2
+        self._threshold = 1
         self.position = self._origin[0], self._origin[1]
 
         self._name = sprite_info['name'] if 'name' in sprite_info else '?????'

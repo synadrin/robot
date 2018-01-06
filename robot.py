@@ -113,7 +113,6 @@ class robot_game(object):
                 came_from,
                 (origin_grid_x, origin_grid_y),
                 (target_grid_x, target_grid_y))
-            print(path)
             path = [
                 (t[0] * tmx_data.tilewidth, t[1] * tmx_data.tileheight)
                 for t in path]
