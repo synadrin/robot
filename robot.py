@@ -26,6 +26,9 @@ class robot_game(object):
         # true while running
         self.running = False
 
+        # True when waiting on the player input (dialogue, menu, etc)
+        self._waiting = False
+
         self.hero = character.character(HERO_SPRITESHEET,
             SPRITE_WIDTH, SPRITE_HEIGHT, HERO_MOVE_SPEED)
 
@@ -66,6 +69,7 @@ class robot_game(object):
         self.walls = list()
         self.npcs = list()
         self.events = list()
+        temp_npcs = list()
         # Also a pathfinding grid
         self.pathfinding_grid = pathfinding.weighted_grid(
             tmx_data.width, tmx_data.height)
@@ -77,33 +81,38 @@ class robot_game(object):
                 self.pathfinding_grid.walls.append(
                     (object.x, object.y))
             elif object.type == 'sprite':
-                target_grid_x = int(object.target_x)
-                target_grid_y = int(object.target_y)
-                target_x = target_grid_x * tmx_data.tilewidth
-                target_y = target_grid_y * tmx_data.tileheight
-                origin_grid_x = int(object.x / tmx_data.tilewidth)
-                origin_grid_y = int(object.y / tmx_data.tileheight)
-                # Pathfinding
-                came_from, cost_so_far = pathfinding.a_star_search(
-                    self.pathfinding_grid,
-                    (origin_grid_x, origin_grid_y),
-                    (target_grid_x, target_grid_y))
-                path = pathfinding.reconstruct_path(
-                    came_from,
-                    (origin_grid_x, origin_grid_y),
-                    (target_grid_x, target_grid_y))
-                path = [
-                    (t[0] * tmx_data.tilewidth, t[1] * tmx_data.tileheight)
-                    for t in path]
-                # Load sprite from JSON
-                npc = character.npc(object.name, path)
-                self.npcs.append(npc)
-                self.group.add(npc)
+                # Process NPCs after walls are determined
+                temp_npcs.append(object)
             elif object.type == 'event':
                 self.events.append(event.event(
                     object.x, object.y,
                     object.width, object.height,
                     object.properties))
+
+        # Process NPCs
+        for object in temp_npcs:
+            target_grid_x = int(object.target_x)
+            target_grid_y = int(object.target_y)
+            target_x = target_grid_x * tmx_data.tilewidth
+            target_y = target_grid_y * tmx_data.tileheight
+            origin_grid_x = int(object.x / tmx_data.tilewidth)
+            origin_grid_y = int(object.y / tmx_data.tileheight)
+            # Pathfinding
+            came_from, cost_so_far = pathfinding.a_star_search(
+                self.pathfinding_grid,
+                (origin_grid_x, origin_grid_y),
+                (target_grid_x, target_grid_y))
+            path = pathfinding.reconstruct_path(
+                came_from,
+                (origin_grid_x, origin_grid_y),
+                (target_grid_x, target_grid_y))
+            path = [
+                (t[0] * tmx_data.tilewidth, t[1] * tmx_data.tileheight)
+                for t in path]
+            # Load sprite from JSON
+            npc = character.npc(object.name, path)
+            self.npcs.append(npc)
+            self.group.add(npc)
 
     def draw_text(self, surface):
         if self._text_set:
@@ -132,6 +141,22 @@ class robot_game(object):
         # Draw text
         self.draw_text(surface)
 
+    def display_text(self, text):
+        self._waiting = True
+        self._text_set = text
+
+    def interaction(self):
+        index = self.hero.interaction_rect.collidelist(self.npcs)
+        # NPC
+        if index > -1:
+            self.display_text(self.npcs[index].name + ': '
+                + self.npcs[index].dialogue)
+        else:
+            # Events, objects
+            index = self.hero.interaction_rect.collidelist(self.events)
+            if index > -1:
+                self.display_text(self.events[index].on_interact)
+
     def handle_input(self):
         """ Handle pygame input events
         """
@@ -157,16 +182,11 @@ class robot_game(object):
                         self.map_layer.zoom = value
 
                 elif event.key == K_SPACE:
-                    #TODO: Interaction
-                    index = self.hero.interaction_rect.collidelist(self.npcs)
-                    # NPC
-                    if index > -1:
-                        self._text_set.append(self.npcs[index].name + ': '
-                            + self.npcs[index].dialogue)
-                    # Events, objects
-                    index = self.hero.interaction_rect.collidelist(self.events)
-                    if index > -1:
-                        self._text_set.append(self.events[index].on_interact)
+                    if self._waiting:
+                        #TODO: Move to next action
+                        print(event.key)
+                    else:
+                        self.interaction()
 
             # this will be handled if the window is resized
             elif event.type == VIDEORESIZE:
@@ -224,7 +244,8 @@ class robot_game(object):
                 times.append(clock.get_fps())
 
                 self.handle_input()
-                self.update(dt)
+                if not self._waiting:
+                    self.update(dt)
                 self.draw(scope.screen)
                 pygame.display.flip()
 
