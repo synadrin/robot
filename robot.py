@@ -131,7 +131,6 @@ class robot_game(object):
                 y += text.get_height()
 
     def draw(self, surface):
-
         # center the map/screen on our Hero
         self.group.center(self.hero.rect.center)
 
@@ -143,7 +142,14 @@ class robot_game(object):
 
     def display_text(self, text):
         self._waiting = True
-        self._text_set = text
+        if isinstance(text, list):
+            self._text_set = text
+        else:
+            self._text_set = [text]
+
+    def clear_text(self):
+        self._waiting = False
+        self._text_set = None
 
     def interaction(self):
         index = self.hero.interaction_rect.collidelist(self.npcs)
@@ -156,6 +162,25 @@ class robot_game(object):
             index = self.hero.interaction_rect.collidelist(self.events)
             if index > -1:
                 self.display_text(self.events[index].on_interact)
+
+    def _button_action(self):
+        if self._waiting:
+            #TODO: Move to next action
+            self.clear_text()
+        else:
+            self.interaction()
+
+    def _button_up(self):
+        print("UP")
+
+    def _button_down(self):
+        print("DOWN")
+
+    def _button_left(self):
+        print("LEFT")
+
+    def _button_right(self):
+        print("RIGHT")
 
     def handle_input(self):
         """ Handle pygame input events
@@ -182,11 +207,7 @@ class robot_game(object):
                         self.map_layer.zoom = value
 
                 elif event.key == K_SPACE:
-                    if self._waiting:
-                        #TODO: Move to next action
-                        print(event.key)
-                    else:
-                        self.interaction()
+                    self._button_action()
 
             # this will be handled if the window is resized
             elif event.type == VIDEORESIZE:
@@ -197,20 +218,21 @@ class robot_game(object):
 
         # using get_pressed is slightly less accurate than testing for events
         # but is much easier to use.
-        pressed = pygame.key.get_pressed()
-        if pressed[K_UP]:
-            self.hero.move_up()
-        elif pressed[K_DOWN]:
-            self.hero.move_down()
-        else:
-            self.hero.stop_moving_vertical()
+        if not self._waiting:
+            pressed = pygame.key.get_pressed()
+            if pressed[K_UP]:
+                self.hero.move_up()
+            elif pressed[K_DOWN]:
+                self.hero.move_down()
+            else:
+                self.hero.stop_moving_vertical()
 
-        if pressed[K_LEFT]:
-            self.hero.move_left()
-        elif pressed[K_RIGHT]:
-            self.hero.move_right()
-        else:
-            self.hero.stop_moving_horizontal()
+            if pressed[K_LEFT]:
+                self.hero.move_left()
+            elif pressed[K_RIGHT]:
+                self.hero.move_right()
+            else:
+                self.hero.stop_moving_horizontal()
 
     def update(self, dt):
         """ Tasks that occur over time should be handled here

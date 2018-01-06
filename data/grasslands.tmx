@@ -99,12 +99,12 @@
    <properties>
     <property name="on_interact" value="dialogue"/>
     <property name="target_x" type="int" value="43"/>
-    <property name="target_y" type="int" value="33"/>
+    <property name="target_y" type="int" value="32"/>
    </properties>
   </object>
   <object id="55" name="door4" type="event" x="704" y="1152" width="32" height="32">
    <properties>
-    <property name="on_interact" value="locked"/>
+    <property name="on_interact" value="The door is locked."/>
    </properties>
   </object>
  </objectgroup>
