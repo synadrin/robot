@@ -5,6 +5,7 @@ from constants import *
 import spritesheet
 
 
+'''
 SPRITESHEET_FILENAME = 'robie-power-on.png'
 SPRITE_WIDTH = 320
 SPRITE_HEIGHT = 320
@@ -28,6 +29,15 @@ FRAMES = [
     [3, 0.25],
     [4, 0.25],
     [5, 10]
+]
+'''
+SPRITESHEET_FILENAME = 'stick-swing.png'
+SPRITE_WIDTH = 320
+SPRITE_HEIGHT = 320
+FRAMES = [
+    [0, 2],
+    [1, 0.1],
+    [2, 0.1],
 ]
 BACKGROUND_COLOUR = (51, 51, 51)
 
