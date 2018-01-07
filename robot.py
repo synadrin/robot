@@ -29,8 +29,7 @@ class robot_game(object):
         # True when waiting on the player input (dialogue, menu, etc)
         self._waiting = False
 
-        self.hero = character.character(HERO_SPRITESHEET,
-            SPRITE_WIDTH, SPRITE_HEIGHT, HERO_MOVE_SPEED)
+        self.hero = character.player(HERO_NAME)
 
         # List used for displaying lines of text
         self._text_set = []

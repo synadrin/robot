@@ -8,11 +8,11 @@ DISPLAY_HEIGHT = 600
 DISPLAY_NAME = 'Robie the Robot'
 DISPLAY_FBDEV = '/dev/fb0'
 
-HERO_SPRITESHEET = 'robie-spritesheet.png'
-HERO_MOVE_SPEED = 200  # pixels per second
-HERO_ANIMATION_SPEED = 20  # ticks per frame
-SPRITE_WIDTH = 32
-SPRITE_HEIGHT = 32
+HERO_NAME = 'robie'
+
+BASE_MOVE_SPEED = 200  # pixels per second
+BASE_ANIMATION_SPEED = 20  # ticks per frame
+
 ALPHA_COLOUR = (0, 255, 0)
 
 DEFAULT_MAP = 'grasslands'

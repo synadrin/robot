@@ -3,7 +3,7 @@
 	"spritesheet": "hero-spritesheet.png",
 	"sprite_width": 32,
 	"sprite_height": 48,
-	"move_speed": 50,
+	"move_speed": 0.25,
 	"frames_per_row": 4,
 	"dialogue": [
 		"Hello, traveller.",

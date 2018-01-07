@@ -35,28 +35,53 @@ class character(pygame.sprite.Sprite):
     collides with level walls.
     """
 
-    def __init__(self, filename, width, height, move_speed, animation_speed=0, frames=4):
+    def __init__(self, filename):
         pygame.sprite.Sprite.__init__(self)
-        self._speed = move_speed
+
+        with open(os.path.join(RESOURCES_DIR, 'c_' + filename + '.json'), 'r') as f:
+            sprite_info = json.load(f)
+        self._filename = filename
+
+        self._name = sprite_info['name'] \
+            if 'name' in sprite_info else '?????'
+        self._spritesheet_filename = sprite_info['spritesheet'] \
+            if 'spritesheet' in sprite_info else None
+        sprite_width = sprite_info['sprite_width'] \
+            if 'sprite_width' in sprite_info else 32
+        sprite_height = sprite_info['sprite_height'] \
+            if 'sprite_height' in sprite_info else 32
+        move_speed = sprite_info['move_speed'] \
+            if 'move_speed' in sprite_info else 1.0
+        animation_speed = sprite_info['animation_speed'] \
+            if 'animation_speed' in sprite_info else 0
+        frames = sprite_info['frames_per_row'] \
+            if 'frames_per_row' in sprite_info else None
+        self._properties = sprite_info
+
+        self._speed = move_speed * BASE_MOVE_SPEED
         self._direction = direction.DOWN
 
         if animation_speed < 1:
-            animation_speed = (HERO_MOVE_SPEED / move_speed) * HERO_ANIMATION_SPEED
+            animation_speed = (1.0 / move_speed) * BASE_ANIMATION_SPEED
 
         self._spritesdown = spritesheet.spritestripanim(
-            filename, (0, 0, width, height),
+            self._spritesheet_filename,
+            (0, 0, sprite_width, sprite_height),
             frames, ALPHA_COLOUR, True, animation_speed
         )
         self._spritesleft = spritesheet.spritestripanim(
-            filename, (0, height, width, height),
+            self._spritesheet_filename,
+            (0, sprite_height, sprite_width, sprite_height),
             frames, ALPHA_COLOUR, True, animation_speed
         )
         self._spritesright = spritesheet.spritestripanim(
-            filename, (0, 2 * height, width, height),
+            self._spritesheet_filename,
+            (0, 2 * sprite_height, sprite_width, sprite_height),
             frames, ALPHA_COLOUR, True, animation_speed
         )
         self._spritesup = spritesheet.spritestripanim(
-            filename, (0, 3 * height, width, height),
+            self._spritesheet_filename,
+            (0, 3 * sprite_height, sprite_width, sprite_height),
             frames, ALPHA_COLOUR, True, animation_speed
         )
         self.image = self._spritesdown.next()
@@ -134,18 +159,20 @@ class character(pygame.sprite.Sprite):
         self._direction = direction.RIGHT
 
 
+class player(character):
+    def __init__(self, filename):
+        super().__init__(filename)
+        self._max_health = self._properties['health'] \
+            if 'health' in self._properties else 1
+        self._current_health = self._max_health
+
+
 class npc(character):
     """NPC (Non-Player Character)
     """
 
     def __init__(self, filename, path):
-        with open(os.path.join(RESOURCES_DIR, 'c_' + filename + '.json'), 'r') as f:
-            sprite_info = json.load(f)
-        self._filename = filename
-        animation_speed = sprite_info['animation_speed'] if 'animation_speed' in sprite_info else 0
-        frames = sprite_info['frames_per_row'] if 'frames_per_row' in sprite_info else None
-        super().__init__(sprite_info['spritesheet'], sprite_info['sprite_width'],
-            sprite_info['sprite_height'], sprite_info['move_speed'], animation_speed, frames)
+        super().__init__(filename)
 
         self._path = path
         # Path with more than one node means the character is moving
@@ -161,8 +188,8 @@ class npc(character):
         self._threshold = 1
         self.position = self._origin[0], self._origin[1]
 
-        self._name = sprite_info['name'] if 'name' in sprite_info else '?????'
-        self._dialogue = sprite_info['dialogue'] if 'dialogue' in sprite_info else []
+        self._dialogue = self._properties['dialogue'] \
+            if 'dialogue' in self._properties else []
 
     @property
     def dialogue(self):
