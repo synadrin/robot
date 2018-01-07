@@ -95,7 +95,7 @@
  </objectgroup>
  <objectgroup name="events">
   <object id="50" name="player_start" x="1376" y="1152" width="32" height="32"/>
-  <object id="51" name="sprite_test" type="sprite" x="832" y="1120" width="32" height="32">
+  <object id="51" name="soldier" type="sprite" x="832" y="1120" width="32" height="32">
    <properties>
     <property name="on_interact" value="dialogue"/>
     <property name="target_x" type="int" value="43"/>
