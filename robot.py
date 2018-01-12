@@ -120,6 +120,11 @@ class robot_game(object):
             self.npcs.append(npc)
             self.group.add(npc)
 
+        #TODO: Testing enemies
+        npc = character.enemy('enemy1', [(22*32, 38*32), (35*32, 38*32)])
+        self.npcs.append(npc)
+        self.group.add(npc)
+
     def draw_text(self, surface):
         if self._text_set:
             vertical_offset = surface.get_height() * (1 - DIALOG_HEIGHT)
