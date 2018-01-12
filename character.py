@@ -175,11 +175,9 @@ class npc(character):
         super().__init__(filename)
 
         self._path = path
-        # Path with more than one node means the character is moving
-        self._moving = len(self._path) > 1
         self._path_index = 0
         self._origin = self._path[self._path_index]
-        if self._moving:
+        if self.moving:
             self._goal = self._path[-1]
             self._path_incrementer = 1
             self._current_goal_index = self._path_index + self._path_incrementer
@@ -202,37 +200,58 @@ class npc(character):
     def name(self):
         return self._name
 
+    @property
+    def moving(self):
+        # Path with more than one node means the character is moving
+        return len(self._path) > 1
+
+    def is_close_enough(self, goal):
+        x_matches = math.fabs(self.position[0] - goal[0]) < self._threshold
+        y_matches = math.fabs(self.position[1] - goal[1]) < self._threshold
+
+        return x_matches, y_matches
+
+    def is_goal_hit(self, goal):
+        x_matches, y_matches = self.is_close_enough(goal)
+        goal_x_hit = (self.velocity[0] == 0 and x_matches) \
+            or (self.velocity[0] > 0 and self.position[0] >= goal[0]) \
+            or (self.velocity[0] < 0 and self.position[0] <= goal[0])
+        goal_y_hit = (self.velocity[1] == 0 and y_matches) \
+            or (self.velocity[1] > 0 and self.position[1] >= goal[1]) \
+            or (self.velocity[1] < 0 and self.position[1] <= goal[1])
+
+        return goal_x_hit, goal_y_hit
+
     def move_toward(self, goal):
-        if self._moving:
-            if math.fabs(goal[0] - self.position[0]) > self._threshold:
-                self.stop_moving_vertical()
-                if goal[0] > self.position[0]:
-                    self.move_right()
-                else:
-                    self.move_left()
-            elif math.fabs(goal[1] - self.position[1]) > self._threshold:
-                self.stop_moving_horizontal()
-                if goal[1] > self.position[1]:
-                    self.move_down()
-                else:
-                    self.move_up()
+        x_matches, y_matches = self.is_close_enough(goal)
+        if not x_matches:
+            self.stop_moving_vertical()
+            if goal[0] > self.position[0]:
+                self.move_right()
+            else:
+                self.move_left()
+        elif not y_matches:
+            self.stop_moving_horizontal()
+            if goal[1] > self.position[1]:
+                self.move_down()
+            else:
+                self.move_up()
 
     def update(self, dt):
-        self.move_toward(self._path[self._current_goal_index])
+        if self.moving:
+            self.move_toward(self._path[self._current_goal_index])
+
         super().update(dt)
 
-        if self._moving:
-            delta_x = self.position[0] - self._old_position[0]
-            delta_y = self.position[1] - self._old_position[1]
-            goal_x_hit = False
-            goal_y_hit = False
-            current_goal = self._path[self._current_goal_index]
-            if math.fabs(self.position[0] - current_goal[0]) < self._threshold:
-                self.position[0] = current_goal[0]
-                goal_x_hit = True
-            if math.fabs(self.position[1] - current_goal[1]) < self._threshold:
-                self.position[1] = current_goal[1]
-                goal_y_hit = True
+        if self.moving:
+            goal_x_hit, goal_y_hit = self.is_goal_hit(
+                self._path[self._current_goal_index]
+            )
+
+            if goal_x_hit:
+                self.position[0] = self._path[self._current_goal_index][0]
+            if goal_y_hit:
+                self.position[1] = self._path[self._current_goal_index][1]
 
             if goal_x_hit and goal_y_hit:
                 self._path_index = self._current_goal_index
@@ -241,3 +260,11 @@ class npc(character):
                     self._path_incrementer *= -1
                     next_goal_index = self._path_index + self._path_incrementer
                 self._current_goal_index = next_goal_index
+
+
+class enemy(npc):
+    def __init__(self, filename, path):
+        super().__init__(filename, path)
+        self._max_health = self._properties['health'] \
+            if 'health' in self._properties else 1
+        self._current_health = self._max_health
