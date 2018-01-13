@@ -10,5 +10,5 @@
 	"health": 2,
 	"min_damage": 1,
 	"max_damage": 2,
-	"threat_radius": 100
+	"threat_range": 100
 }

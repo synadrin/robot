@@ -272,7 +272,14 @@ class enemy(npc):
             if 'min_damage' in self._properties else 0
         self._max_damage = self._properties['max_damage'] \
             if 'max_damage' in self._properties else 0
+        self._threat_range = self._properties['threat_range'] \
+            if 'threat_range' in self._properties else 0
 
     @property
     def damage(self):
         return random.randint(self._min_damage, self._max_damage)
+
+    def in_threat_range(self, target):
+        delta_x = math.fabs(target[0] - self.position[0])
+        delta_y = math.fabs(target[1] - self.position[1])
+        return math.sqrt(delta_x**2 + delta_y**2) <= self._threat_range
