@@ -8,5 +8,7 @@
 	"frames_per_row": 4,
 
 	"health": 2,
+	"min_damage": 1,
+	"max_damage": 2,
 	"threat_radius": 100
 }
