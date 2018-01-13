@@ -268,3 +268,11 @@ class enemy(npc):
         self._max_health = self._properties['health'] \
             if 'health' in self._properties else 1
         self._current_health = self._max_health
+        self._min_damage = self._properties['min_damage'] \
+            if 'min_damage' in self._properties else 0
+        self._max_damage = self._properties['max_damage'] \
+            if 'max_damage' in self._properties else 0
+
+    @property
+    def damage(self):
+        return random.randint(self._min_damage, self._max_damage)
