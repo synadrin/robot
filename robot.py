@@ -260,7 +260,9 @@ class robot_game(object):
         for npc in self.npcs:
             if npc.feet.colliderect(self.hero.feet):
                 npc.move_back(dt)
-                self.hero.move_back(dt)
+#TODO: Hero and NPC collision without getting stuck
+#                self.hero.move_back(dt)
+        # Check enemy threat ranges
 
     def run(self):
         """ Run the game loop
