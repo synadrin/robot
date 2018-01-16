@@ -205,6 +205,10 @@ class npc(character):
         # Path with more than one node means the character is moving
         return len(self._path) > 1
 
+    @property
+    def current_goal(self):
+        return self._path[self._current_goal_index]
+
     def is_close_enough(self, goal):
         x_matches = math.fabs(self.position[0] - goal[0]) < self._threshold
         y_matches = math.fabs(self.position[1] - goal[1]) < self._threshold
@@ -237,29 +241,32 @@ class npc(character):
             else:
                 self.move_up()
 
+    def next_goal(self):
+        self._path_index = self._current_goal_index
+        next_goal_index = self._path_index + self._path_incrementer
+        if not 0 <= next_goal_index < len(self._path):
+            self._path_incrementer *= -1
+            next_goal_index = self._path_index + self._path_incrementer
+        self._current_goal_index = next_goal_index
+
     def update(self, dt):
         if self.moving:
-            self.move_toward(self._path[self._current_goal_index])
+            self.move_toward(self.current_goal)
 
         super().update(dt)
 
         if self.moving:
             goal_x_hit, goal_y_hit = self.is_goal_hit(
-                self._path[self._current_goal_index]
+                self.current_goal
             )
 
             if goal_x_hit:
-                self.position[0] = self._path[self._current_goal_index][0]
+                self.position[0] = self.current_goal[0]
             if goal_y_hit:
-                self.position[1] = self._path[self._current_goal_index][1]
+                self.position[1] = self.current_goal[1]
 
             if goal_x_hit and goal_y_hit:
-                self._path_index = self._current_goal_index
-                next_goal_index = self._path_index + self._path_incrementer
-                if not 0 <= next_goal_index < len(self._path):
-                    self._path_incrementer *= -1
-                    next_goal_index = self._path_index + self._path_incrementer
-                self._current_goal_index = next_goal_index
+                self.next_goal()
 
 
 class enemy(npc):
@@ -274,6 +281,7 @@ class enemy(npc):
             if 'max_damage' in self._properties else 0
         self._threat_range = self._properties['threat_range'] \
             if 'threat_range' in self._properties else 0
+        self.threat_target = None
 
     @property
     def damage(self):
@@ -283,3 +291,10 @@ class enemy(npc):
         delta_x = math.fabs(target[0] - self.position[0])
         delta_y = math.fabs(target[1] - self.position[1])
         return math.sqrt(delta_x**2 + delta_y**2) <= self._threat_range
+
+#    def update(self, dt):
+#        if self.in_threat_range(self.threat_target):
+#            self.move_toward(target)
+#            #TODO how to override the movement?
+#        else:
+#            super().update(dt)
