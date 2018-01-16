@@ -67,6 +67,7 @@ class robot_game(object):
         # setup level geometry with simple pygame rects, loaded from pytmx
         self.walls = list()
         self.npcs = list()
+        self.enemies = list()
         self.events = list()
         temp_npcs = list()
         # Also a pathfinding grid
@@ -86,8 +87,8 @@ class robot_game(object):
                     for x in range(0, grid_width):
                         self.pathfinding_grid.walls.append(
                             (grid_x + x, grid_y + y))
-            elif object.type == 'sprite':
-                # Process NPCs after walls are determined
+            elif object.type == 'npc' or object.type == 'enemy':
+                # Process NPCs and enemies after walls are determined
                 temp_npcs.append(object)
             elif object.type == 'event':
                 self.events.append(event.event(
@@ -95,7 +96,7 @@ class robot_game(object):
                     object.width, object.height,
                     object.properties))
 
-        # Process NPCs
+        # Process NPCs and enemies
         for object in temp_npcs:
             target_grid_x = int(object.target_x)
             target_grid_y = int(object.target_y)
@@ -116,14 +117,14 @@ class robot_game(object):
                 (t[0] * tmx_data.tilewidth, t[1] * tmx_data.tileheight)
                 for t in path]
             # Load sprite from JSON
-            npc = character.npc(object.name, path)
-            self.npcs.append(npc)
-            self.group.add(npc)
-
-        #TODO: Testing enemies
-        npc = character.enemy('enemy1', [(22*32, 38*32), (35*32, 38*32)])
-        self.npcs.append(npc)
-        self.group.add(npc)
+            if object.type == 'npc':
+                npc = character.npc(object.name, path)
+                self.npcs.append(npc)
+                self.group.add(npc)
+            elif object.type == 'enemy':
+                enemy = character.enemy(object.name, path)
+                self.enemies.append(enemy)
+                self.group.add(enemy)
 
     def draw_text(self, surface):
         if self._text_set:
@@ -260,9 +261,12 @@ class robot_game(object):
         for npc in self.npcs:
             if npc.feet.colliderect(self.hero.feet):
                 npc.move_back(dt)
-#TODO: Hero and NPC collision without getting stuck
-#                self.hero.move_back(dt)
-        # Check enemy threat ranges
+                #TODO: Hero and NPC collision without getting stuck
+                #self.hero.move_back(dt)
+        for enemy in self.enemies:
+            if enemy.feet.colliderect(self.hero.feet):
+                enemy.move_back(dt)
+            enemy.threat_target = self.hero.position
 
     def run(self):
         """ Run the game loop

@@ -285,7 +285,6 @@ class enemy(npc):
 
     @property
     def current_goal(self):
-        print(self.threat_target)
         if self.threat_target and self.in_threat_range(self.threat_target):
             return self.threat_target
         else:
