@@ -158,6 +158,10 @@ class character(pygame.sprite.Sprite):
         self.image = self._spritesright.next()
         self._direction = direction.RIGHT
 
+    def stop_moving(self):
+        self.stop_moving_horizontal()
+        self.stop_moving_vertical()
+
 
 class player(character):
     def __init__(self, filename):
@@ -229,13 +233,13 @@ class npc(character):
     def move_toward(self, goal):
         x_matches, y_matches = self.is_close_enough(goal)
         if not x_matches:
-            self.stop_moving_vertical()
+            #self.stop_moving_vertical()
             if goal[0] > self.position[0]:
                 self.move_right()
             else:
                 self.move_left()
-        elif not y_matches:
-            self.stop_moving_horizontal()
+        if not y_matches:
+            #self.stop_moving_horizontal()
             if goal[1] > self.position[1]:
                 self.move_down()
             else:
@@ -251,6 +255,7 @@ class npc(character):
 
     def update(self, dt):
         if self.moving:
+            self.stop_moving()
             self.move_toward(self.current_goal)
 
         super().update(dt)
