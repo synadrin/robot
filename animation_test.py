@@ -31,13 +31,15 @@ FRAMES = [
     [5, 10]
 ]
 '''
-SPRITESHEET_FILENAME = 'stick-swing.png'
+SPRITESHEET_FILENAME = 'arm-swing.png'
 SPRITE_WIDTH = 320
 SPRITE_HEIGHT = 320
 FRAMES = [
     [0, 2],
     [1, 0.1],
     [2, 0.1],
+    [3, 0.1],
+    [4, 0.1],
 ]
 BACKGROUND_COLOUR = (51, 51, 51)
 
