@@ -100,29 +100,12 @@ class character(pygame.sprite.Sprite):
     def position(self, value):
         self._position = list(value)
 
-    def update_interaction_rect(self):
-        self.interaction_rect.topleft = self._position[:]
-        self.interaction_rect.size = (self.rect.width, self.rect.height)
-        if self._direction == direction.UP:
-            self.interaction_rect.height *= 0.5
-            self.interaction_rect.y -= self.interaction_rect.height
-        elif self._direction == direction.DOWN:
-            self.interaction_rect.height *= 0.5
-            self.interaction_rect.y += self.interaction_rect.height
-        elif self._direction == direction.LEFT:
-            self.interaction_rect.width *= 0.5
-            self.interaction_rect.x -= self.interaction_rect.width
-        elif self._direction == direction.RIGHT:
-            self.interaction_rect.width *= 0.5
-            self.interaction_rect.x += self.interaction_rect.width
-
     def update(self, dt):
         self._old_position = self._position[:]
         self._position[0] += self.velocity[0] * dt
         self._position[1] += self.velocity[1] * dt
         self.rect.topleft = self._position
         self.feet.midbottom = self.rect.midbottom
-        self.update_interaction_rect()
 
     def move_back(self, dt):
         """ If called after an update, the sprite can move back
@@ -130,7 +113,6 @@ class character(pygame.sprite.Sprite):
         self._position = self._old_position
         self.rect.topleft = self._position
         self.feet.midbottom = self.rect.midbottom
-        self.update_interaction_rect()
 
     def stop_moving_vertical(self):
         self.velocity[1] = 0
@@ -169,6 +151,30 @@ class player(character):
         self._max_health = self._properties['health'] \
             if 'health' in self._properties else 1
         self._current_health = self._max_health
+
+    def update_interaction_rect(self):
+        self.interaction_rect.topleft = self._position[:]
+        self.interaction_rect.size = (self.rect.width, self.rect.height)
+        if self._direction == direction.UP:
+            self.interaction_rect.height *= 0.5
+            self.interaction_rect.y -= self.interaction_rect.height
+        elif self._direction == direction.DOWN:
+            self.interaction_rect.height *= 0.5
+            self.interaction_rect.y += self.interaction_rect.height
+        elif self._direction == direction.LEFT:
+            self.interaction_rect.width *= 0.5
+            self.interaction_rect.x -= self.interaction_rect.width
+        elif self._direction == direction.RIGHT:
+            self.interaction_rect.width *= 0.5
+            self.interaction_rect.x += self.interaction_rect.width
+
+    def update(self, dt):
+        super().update(dt)
+        self.update_interaction_rect()
+
+    def move_back(self, dt):
+        super().move_back(dt)
+        self.update_interaction_rect()
 
 
 class npc(character):
