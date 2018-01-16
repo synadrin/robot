@@ -284,6 +284,14 @@ class enemy(npc):
         self.threat_target = None
 
     @property
+    def current_goal(self):
+        print(self.threat_target)
+        if self.threat_target and self.in_threat_range(self.threat_target):
+            return self.threat_target
+        else:
+            return super().current_goal
+
+    @property
     def damage(self):
         return random.randint(self._min_damage, self._max_damage)
 
@@ -291,10 +299,3 @@ class enemy(npc):
         delta_x = math.fabs(target[0] - self.position[0])
         delta_y = math.fabs(target[1] - self.position[1])
         return math.sqrt(delta_x**2 + delta_y**2) <= self._threat_range
-
-#    def update(self, dt):
-#        if self.in_threat_range(self.threat_target):
-#            self.move_toward(target)
-#            #TODO how to override the movement?
-#        else:
-#            super().update(dt)
