@@ -1,0 +1,37 @@
+## Tiled
+
+http://doc.mapeditor.org/en/latest/manual/custom-properties/
+http://pytmx.readthedocs.io/en/latest/
+
+## Python modules
+
+https://github.com/bitcraft/PyTMX
+https://github.com/bitcraft/pyscroll
+https://github.com/bitcraft/pyscroll/wiki/Tutorial-(WIP)
+
+## pygame
+
+https://pygame.org/wiki/Spritesheet
+https://www.pygame.org/docs/ref/event.html#pygame.event.poll
+https://www.pygame.org/docs/ref/key.html
+https://www.pygame.org/docs/ref/joystick.html
+https://nebelprog.wordpress.com/2013/08/14/create-a-simple-game-menu-with-pygame-pt-1-writing-the-menu-options-to-the-screen/
+https://pythonprogramming.net/pygame-start-menu-tutorial/
+
+## Sprites
+
+https://opengameart.org/
+http://www.gdunlimited.net/resources/cat/rpg-maker-vx-ace/character-sprites
+
+## RPi
+
+### Raspbian Read-Only
+
+https://learn.adafruit.com/read-only-raspberry-pi/overview
+https://www.raspberrypi.org/forums/viewtopic.php?t=161416
+https://www.monocilindro.com/2017/02/18/how-to-make-raspberry-pi-3-with-raspbian-jessie-read-only/
+http://k3a.me/how-to-make-raspberrypi-truly-read-only-reliable-and-trouble-free/
+
+### Framebuffer
+
+https://learn.adafruit.com/pi-video-output-using-pygame/pointing-pygame-to-the-framebuffer
