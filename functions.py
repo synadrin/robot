@@ -19,3 +19,13 @@ def get_map(filename):
 # make loading images a little easier
 def load_image(filename):
     return pygame.image.load(os.path.join(RESOURCES_DIR, filename))
+
+
+def calculate_knockback(source, target, knockback_value):
+    delta_x = target[0] - source[0]
+    delta_y = target[1] - source[1]
+    distance = math.sqrt(delta_x**2 + delta_y**2)
+    knockback = [
+        knockback_value * delta_x / distance,
+        knockback_value * delta_y / distance
+    ]
