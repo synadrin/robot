@@ -144,6 +144,12 @@ class character(pygame.sprite.Sprite):
         self.stop_moving_horizontal()
         self.stop_moving_vertical()
 
+    def block_movement(self, duration):
+        print(duration)
+
+    def take_damage(self, damage, knockback):
+        print(damage, knockback)
+
 
 class player(character):
     def __init__(self, filename):
