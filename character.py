@@ -298,6 +298,8 @@ class enemy(npc):
             if 'max_damage' in self._properties else 0
         self._threat_range = self._properties['threat_range'] \
             if 'threat_range' in self._properties else 0
+        self.knockback = self._properties['knockback'] \
+            if 'knockback' in self._properties else 0
         self.threat_target = None
 
     @property
