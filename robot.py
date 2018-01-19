@@ -266,6 +266,12 @@ class robot_game(object):
         for enemy in self.enemies:
             if enemy.feet.colliderect(self.hero.feet):
                 enemy.move_back(dt)
+                self.hero.take_damage(
+                    enemy.damage,
+                    calculate_knockback(
+                        enemy.position, self.hero.position, enemy.knockback
+                    )
+                )
             enemy.threat_target = self.hero.position
 
     def run(self):

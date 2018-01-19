@@ -90,7 +90,7 @@ class character(pygame.sprite.Sprite):
         self._old_position = self.position
         self.rect = self.image.get_rect()
         self.feet = pygame.Rect(0, 0, self.rect.width * .5, self.rect.height / 4)
-        self.interaction_rect = pygame.Rect(0, 0, self.rect.width * 0.5, self.rect.height)
+        self._movement_blocked_timer = 0.0
 
     @property
     def position(self):
@@ -100,12 +100,22 @@ class character(pygame.sprite.Sprite):
     def position(self, value):
         self._position = list(value)
 
+    @property
+    def movement_blocked(self):
+        return self._movement_blocked_timer > 0
+
+    def update_movement_blocked(self, dt):
+        self._movement_blocked_timer -= dt
+        if self._movement_blocked_timer < 0:
+            self._movement_blocked_timer = 0.0
+
     def update(self, dt):
         self._old_position = self._position[:]
         self._position[0] += self.velocity[0] * dt
         self._position[1] += self.velocity[1] * dt
         self.rect.topleft = self._position
         self.feet.midbottom = self.rect.midbottom
+        self.update_movement_blocked(dt)
 
     def move_back(self, dt):
         """ If called after an update, the sprite can move back
@@ -115,45 +125,54 @@ class character(pygame.sprite.Sprite):
         self.feet.midbottom = self.rect.midbottom
 
     def stop_moving_vertical(self):
-        self.velocity[1] = 0
+        if not self.movement_blocked:
+            self.velocity[1] = 0
 
     def move_up(self):
-        self.velocity[1] = -self._speed
-        self.image = self._spritesup.next()
-        self._direction = direction.UP
+        if not self.movement_blocked:
+            self.velocity[1] = -self._speed
+            self.image = self._spritesup.next()
+            self._direction = direction.UP
 
     def move_down(self):
-        self.velocity[1] = self._speed
-        self.image = self._spritesdown.next()
-        self._direction = direction.DOWN
+        if not self.movement_blocked:
+            self.velocity[1] = self._speed
+            self.image = self._spritesdown.next()
+            self._direction = direction.DOWN
 
     def stop_moving_horizontal(self):
-        self.velocity[0] = 0
+        if not self.movement_blocked:
+            self.velocity[0] = 0
 
     def move_left(self):
-        self.velocity[0] = -self._speed
-        self.image = self._spritesleft.next()
-        self._direction = direction.LEFT
+        if not self.movement_blocked:
+            self.velocity[0] = -self._speed
+            self.image = self._spritesleft.next()
+            self._direction = direction.LEFT
     
     def move_right(self):
-        self.velocity[0] = self._speed
-        self.image = self._spritesright.next()
-        self._direction = direction.RIGHT
+        if not self.movement_blocked:
+            self.velocity[0] = self._speed
+            self.image = self._spritesright.next()
+            self._direction = direction.RIGHT
 
     def stop_moving(self):
         self.stop_moving_horizontal()
         self.stop_moving_vertical()
 
     def block_movement(self, duration):
-        print(duration)
+        self._movement_blocked_timer = duration
 
     def take_damage(self, damage, knockback):
-        print(damage, knockback)
+        self.block_movement(0.25)
+        self.velocity[0] = knockback[0]
+        self.velocity[1] = knockback[1]
 
 
 class player(character):
     def __init__(self, filename):
         super().__init__(filename)
+        self.interaction_rect = pygame.Rect(0, 0, self.rect.width * 0.5, self.rect.height)
         self._max_health = self._properties['health'] \
             if 'health' in self._properties else 1
         self._current_health = self._max_health

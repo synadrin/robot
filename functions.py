@@ -1,4 +1,5 @@
 import os.path
+import math
 
 import pygame
 
@@ -25,7 +26,7 @@ def calculate_knockback(source, target, knockback_value):
     delta_x = target[0] - source[0]
     delta_y = target[1] - source[1]
     distance = math.sqrt(delta_x**2 + delta_y**2)
-    knockback = [
+    return [
         knockback_value * delta_x / distance,
         knockback_value * delta_y / distance
     ]
