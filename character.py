@@ -46,9 +46,9 @@ class character(pygame.sprite.Sprite):
             if 'name' in sprite_info else '?????'
         self._spritesheet_filename = sprite_info['spritesheet'] \
             if 'spritesheet' in sprite_info else None
-        sprite_width = sprite_info['sprite_width'] \
+        self._sprite_width = sprite_info['sprite_width'] \
             if 'sprite_width' in sprite_info else 32
-        sprite_height = sprite_info['sprite_height'] \
+        self._sprite_height = sprite_info['sprite_height'] \
             if 'sprite_height' in sprite_info else 32
         move_speed = sprite_info['move_speed'] \
             if 'move_speed' in sprite_info else 1.0
@@ -66,25 +66,25 @@ class character(pygame.sprite.Sprite):
 
         self._spritesdown = spritesheet.spritestripanim(
             self._spritesheet_filename,
-            (0, 0, sprite_width, sprite_height),
+            (0, 0, self._sprite_width, self._sprite_height),
             frames, ALPHA_COLOUR, True, animation_speed
         )
         self._spritesleft = spritesheet.spritestripanim(
             self._spritesheet_filename,
-            (0, sprite_height, sprite_width, sprite_height),
+            (0, self._sprite_height, self._sprite_width, self._sprite_height),
             frames, ALPHA_COLOUR, True, animation_speed
         )
         self._spritesright = spritesheet.spritestripanim(
             self._spritesheet_filename,
-            (0, 2 * sprite_height, sprite_width, sprite_height),
+            (0, 2 * self._sprite_height, self._sprite_width, self._sprite_height),
             frames, ALPHA_COLOUR, True, animation_speed
         )
         self._spritesup = spritesheet.spritestripanim(
             self._spritesheet_filename,
-            (0, 3 * sprite_height, sprite_width, sprite_height),
+            (0, 3 * self._sprite_height, self._sprite_width, self._sprite_height),
             frames, ALPHA_COLOUR, True, animation_speed
         )
-        self.image = self._spritesdown.next()
+        self._image = self._spritesdown.next()
         self.velocity = [0, 0]
         self._position = [0, 0]
         self._old_position = self.position
@@ -99,6 +99,10 @@ class character(pygame.sprite.Sprite):
     @position.setter
     def position(self, value):
         self._position = list(value)
+
+    @property
+    def image(self):
+        return self._image
 
     @property
     def movement_blocked(self):
@@ -131,13 +135,13 @@ class character(pygame.sprite.Sprite):
     def move_up(self):
         if not self.movement_blocked:
             self.velocity[1] = -self._speed
-            self.image = self._spritesup.next()
+            self._image = self._spritesup.next()
             self._direction = direction.UP
 
     def move_down(self):
         if not self.movement_blocked:
             self.velocity[1] = self._speed
-            self.image = self._spritesdown.next()
+            self._image = self._spritesdown.next()
             self._direction = direction.DOWN
 
     def stop_moving_horizontal(self):
@@ -147,13 +151,13 @@ class character(pygame.sprite.Sprite):
     def move_left(self):
         if not self.movement_blocked:
             self.velocity[0] = -self._speed
-            self.image = self._spritesleft.next()
+            self._image = self._spritesleft.next()
             self._direction = direction.LEFT
     
     def move_right(self):
         if not self.movement_blocked:
             self.velocity[0] = self._speed
-            self.image = self._spritesright.next()
+            self._image = self._spritesright.next()
             self._direction = direction.RIGHT
 
     def stop_moving(self):
@@ -166,12 +170,27 @@ class character(pygame.sprite.Sprite):
 
 class player(character):
     def __init__(self, filename):
+        self._invulnerability_timer = 0.0
         super().__init__(filename)
-        self.interaction_rect = pygame.Rect(0, 0, self.rect.width * 0.5, self.rect.height)
+        self.interaction_rect = pygame.Rect(
+            0, 0, self.rect.width * 0.5, self.rect.height
+        )
         self._max_health = self._properties['health'] \
             if 'health' in self._properties else 1
         self._current_health = self._max_health
-        self._invulnerability_timer = 0.0
+        # Sprite used for "blinking" when damaged
+        self._blink_image = pygame.Surface(
+            (self._sprite_width, self._sprite_height)
+        ).convert()
+        self._blink_image.fill(ALPHA_COLOUR)
+        self._blink_image.set_colorkey(ALPHA_COLOUR)
+
+    @property
+    def image(self):
+        if self.is_invulnerable and int(self._invulnerability_timer * 10) % 2 == 0:
+            return self._blink_image
+        else:
+            return super().image
 
     @property
     def is_invulnerable(self):
