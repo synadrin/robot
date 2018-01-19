@@ -163,11 +163,6 @@ class character(pygame.sprite.Sprite):
     def block_movement(self, duration):
         self._movement_blocked_timer = duration
 
-    def take_damage(self, damage, knockback):
-        self.block_movement(0.25)
-        self.velocity[0] = knockback[0]
-        self.velocity[1] = knockback[1]
-
 
 class player(character):
     def __init__(self, filename):
@@ -176,6 +171,11 @@ class player(character):
         self._max_health = self._properties['health'] \
             if 'health' in self._properties else 1
         self._current_health = self._max_health
+        self._invulnerability_timer = 0.0
+
+    @property
+    def is_invulnerable(self):
+        return self._invulnerability_timer > 0
 
     def update_interaction_rect(self):
         self.interaction_rect.topleft = self._position[:]
@@ -193,13 +193,27 @@ class player(character):
             self.interaction_rect.width *= 0.5
             self.interaction_rect.x += self.interaction_rect.width
 
+    def update_invulerability(self, dt):
+        self._invulnerability_timer -= dt
+        if self._invulnerability_timer < 0:
+            self._invulnerability_timer = 0.0
+
     def update(self, dt):
         super().update(dt)
         self.update_interaction_rect()
+        self.update_invulerability(dt)
 
     def move_back(self, dt):
         super().move_back(dt)
         self.update_interaction_rect()
+
+    def take_damage(self, damage, knockback):
+        if not self.is_invulnerable:
+            #TODO: Times should not be hardcoded
+            self.block_movement(0.25)
+            self._invulnerability_timer = 1.0
+            self.velocity[0] = knockback[0]
+            self.velocity[1] = knockback[1]
 
 
 class npc(character):
