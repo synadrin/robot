@@ -176,9 +176,9 @@ class player(character):
         self.interaction_rect = pygame.Rect(
             0, 0, self.rect.width * 0.5, self.rect.height
         )
-        self._max_health = self._properties['health'] \
+        self.max_health = self._properties['health'] \
             if 'health' in self._properties else 1
-        self._current_health = self._max_health
+        self._current_health = self.max_health
         # Sprite used for "blinking" when damaged
         self._blink_image = pygame.Surface(
             (self._sprite_width, self._sprite_height)
@@ -202,7 +202,6 @@ class player(character):
         self._current_health = value
         if self._current_health < 0:
             self._current_health = 0
-        print(self._current_health)
 
     @property
     def is_invulnerable(self):

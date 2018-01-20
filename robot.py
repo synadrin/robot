@@ -8,6 +8,7 @@ import pyscope
 
 from constants import *
 from functions import *
+import spritesheet
 import character
 import event
 import pathfinding
@@ -33,6 +34,14 @@ class robot_game(object):
 
         # List used for displaying lines of text
         self._text_set = []
+
+        # Load images for UI
+        #TODO: No hardcoded values
+        self._ui_spritesheet = spritesheet.spritesheet('ui.png')
+        self._ui_images = self._ui_spritesheet.load_all(
+            (0, 0, 16, 16),
+            ALPHA_COLOUR
+        )
 
         # Load the default map
         self.load_map(DEFAULT_MAP)
@@ -142,12 +151,40 @@ class robot_game(object):
                 surface.blit(text, (x, y))
                 y += text.get_height()
 
+    def draw_ui(self, surface):
+        # Health
+        full_count = int(self.hero.health / 2)
+        half_count = self.hero.health % 2
+        empty_count = int((self.hero.max_health - self.hero.health) / 2)
+        for i in range(0, full_count):
+            #x = surface.get_width() - ((i / 2 + 1) * self._ui_images[0].get_width())
+            x = i * self._ui_images[2].get_width()
+            y = 0
+            surface.blit(
+                self._ui_images[2], (x, y)
+            )
+        for i in range(0, half_count):
+            x = (i + full_count) * self._ui_images[1].get_width()
+            y = 0
+            surface.blit(
+                self._ui_images[1], (x, y)
+            )
+        for i in range(0, empty_count):
+            x = (i + full_count + half_count) * self._ui_images[0].get_width()
+            y = 0
+            surface.blit(
+                self._ui_images[0], (x, y)
+            )
+
     def draw(self, surface):
         # center the map/screen on our Hero
         self.group.center(self.hero.rect.center)
 
         # draw the map and all sprites
         self.group.draw(surface)
+
+        # Draw user interface
+        self.draw_ui(surface)
 
         # Draw text
         self.draw_text(surface)
