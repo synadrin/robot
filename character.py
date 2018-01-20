@@ -193,6 +193,17 @@ class player(character):
             return super().image
 
     @property
+    def health(self):
+        return self._current_health
+
+    @health.setter
+    def health(self, value):
+        self._current_health = value
+        if self._current_health < 0:
+            self._current_health = 0
+        print(self._current_health)
+
+    @property
     def is_invulnerable(self):
         return self._invulnerability_timer > 0
 
@@ -228,6 +239,7 @@ class player(character):
 
     def take_damage(self, damage, knockback):
         if not self.is_invulnerable:
+            self.health -= damage
             #TODO: Times should not be hardcoded
             self.block_movement(0.25)
             self._invulnerability_timer = 1.0
