@@ -8,10 +8,12 @@ DISPLAY_HEIGHT = 600
 DISPLAY_NAME = 'Robie the Robot'
 DISPLAY_FBDEV = '/dev/fb0'
 
+TARGET_FPS = 120
+
 HERO_NAME = 'robie'
 
 BASE_MOVE_SPEED = 200  # pixels per second
-BASE_ANIMATION_SPEED = 20  # ticks per frame
+BASE_ANIMATION_SPEED = 0.2  # Seconds per frame
 
 ALPHA_COLOUR = (0, 255, 0)
 

@@ -285,7 +285,7 @@ class robot_game(object):
 
         try:
             while self.running:
-                dt = clock.tick(120) / 1000.
+                dt = clock.tick(TARGET_FPS) / 1000.
                 times.append(clock.get_fps())
 
                 self.handle_input()

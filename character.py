@@ -53,7 +53,7 @@ class character(pygame.sprite.Sprite):
         move_speed = sprite_info['move_speed'] \
             if 'move_speed' in sprite_info else 1.0
         animation_speed = sprite_info['animation_speed'] \
-            if 'animation_speed' in sprite_info else 0
+            if 'animation_speed' in sprite_info else -1
         frames = sprite_info['frames_per_row'] \
             if 'frames_per_row' in sprite_info else None
         self._properties = sprite_info
@@ -61,8 +61,9 @@ class character(pygame.sprite.Sprite):
         self._speed = move_speed * BASE_MOVE_SPEED
         self._direction = direction.DOWN
 
-        if animation_speed < 1:
+        if animation_speed <= 0:
             animation_speed = (1.0 / move_speed) * BASE_ANIMATION_SPEED
+        animation_speed *= TARGET_FPS
 
         self._spritesdown = spritesheet.spritestripanim(
             self._spritesheet_filename,

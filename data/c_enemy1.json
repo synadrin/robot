@@ -4,7 +4,7 @@
 	"sprite_width": 32,
 	"sprite_height": 32,
 	"move_speed": 0.7,
-	"animation_speed": 20,
+	"animation_speed": 0.2,
 	"frames_per_row": 4,
 
 	"health": 2,
