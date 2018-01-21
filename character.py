@@ -247,9 +247,8 @@ class player(character):
     def take_damage(self, damage, knockback):
         if not self.is_invulnerable:
             self.health -= damage
-            #TODO: Times should not be hardcoded
-            self.block_movement(0.25)
-            self._invulnerability_timer = 1.0
+            self.block_movement(KNOCKBACK_TIME)
+            self._invulnerability_timer = INVULNERABILITY_TIME
             self.velocity[0] = knockback[0]
             self.velocity[1] = knockback[1]
 
