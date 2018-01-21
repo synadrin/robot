@@ -12,9 +12,11 @@ TARGET_FPS = 120
 
 HERO_NAME = 'robie'
 
-BASE_MOVE_SPEED = 200  # pixels per second
+BASE_MOVE_SPEED = 200  # Pixels per second
 BASE_ANIMATION_SPEED = 0.2  # Seconds per frame
 
+DEFAULT_SPRITE_WIDTH = 32
+DEFAULT_SPRITE_HEIGHT = 32
 ALPHA_COLOUR = (0, 255, 0)
 
 DEFAULT_MAP = 'grasslands'

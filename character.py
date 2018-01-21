@@ -17,7 +17,31 @@ class direction(Enum):
     LEFT = 8
 
 
-class character(pygame.sprite.Sprite):
+class base_sprite(pygame.sprite.Sprite):
+    def __init__(self, prefix, filename):
+        pygame.sprite.Sprite.__init__(self)
+
+        with open(os.path.join(RESOURCES_DIR, prefix + '_' + filename + '.json'), 'r') as f:
+            sprite_info = json.load(f)
+        self._prefix = prefix
+        self._filename = filename
+
+        self._name = sprite_info['name'] \
+            if 'name' in sprite_info else '?????'
+        self._spritesheet_filename = sprite_info['spritesheet'] \
+            if 'spritesheet' in sprite_info else None
+        self._sprite_width = sprite_info['sprite_width'] \
+            if 'sprite_width' in sprite_info else DEFAULT_SPRITE_WIDTH
+        self._sprite_height = sprite_info['sprite_height'] \
+            if 'sprite_height' in sprite_info else DEFAULT_SPRITE_HEIGHT
+        self._animation_speed = sprite_info['animation_speed'] \
+            if 'animation_speed' in sprite_info else -1
+        self._frames = sprite_info['frames_per_row'] \
+            if 'frames_per_row' in sprite_info else None
+        self._properties = sprite_info
+
+
+class character(base_sprite):
     """ Character
 
     Characters have three collision rects, one for the whole sprite "rect" and
@@ -36,54 +60,37 @@ class character(pygame.sprite.Sprite):
     """
 
     def __init__(self, filename):
-        pygame.sprite.Sprite.__init__(self)
+        super().__init__('c', filename)
 
-        with open(os.path.join(RESOURCES_DIR, 'c_' + filename + '.json'), 'r') as f:
-            sprite_info = json.load(f)
-        self._filename = filename
-
-        self._name = sprite_info['name'] \
-            if 'name' in sprite_info else '?????'
-        self._spritesheet_filename = sprite_info['spritesheet'] \
-            if 'spritesheet' in sprite_info else None
-        self._sprite_width = sprite_info['sprite_width'] \
-            if 'sprite_width' in sprite_info else 32
-        self._sprite_height = sprite_info['sprite_height'] \
-            if 'sprite_height' in sprite_info else 32
-        move_speed = sprite_info['move_speed'] \
-            if 'move_speed' in sprite_info else 1.0
-        animation_speed = sprite_info['animation_speed'] \
-            if 'animation_speed' in sprite_info else -1
-        frames = sprite_info['frames_per_row'] \
-            if 'frames_per_row' in sprite_info else None
-        self._properties = sprite_info
+        move_speed = self._properties['move_speed'] \
+            if 'move_speed' in self._properties else 1.0
 
         self._speed = move_speed * BASE_MOVE_SPEED
         self._direction = direction.DOWN
 
-        if animation_speed <= 0:
-            animation_speed = (1.0 / move_speed) * BASE_ANIMATION_SPEED
-        animation_speed *= TARGET_FPS
+        if self._animation_speed <= 0:
+            self._animation_speed = (1.0 / move_speed) * BASE_ANIMATION_SPEED
+        self._animation_speed *= TARGET_FPS
 
         self._spritesdown = spritesheet.spritestripanim(
             self._spritesheet_filename,
             (0, 0, self._sprite_width, self._sprite_height),
-            frames, ALPHA_COLOUR, True, animation_speed
+            self._frames, ALPHA_COLOUR, True, self._animation_speed
         )
         self._spritesleft = spritesheet.spritestripanim(
             self._spritesheet_filename,
             (0, self._sprite_height, self._sprite_width, self._sprite_height),
-            frames, ALPHA_COLOUR, True, animation_speed
+            self._frames, ALPHA_COLOUR, True, self._animation_speed
         )
         self._spritesright = spritesheet.spritestripanim(
             self._spritesheet_filename,
             (0, 2 * self._sprite_height, self._sprite_width, self._sprite_height),
-            frames, ALPHA_COLOUR, True, animation_speed
+            self._frames, ALPHA_COLOUR, True, self._animation_speed
         )
         self._spritesup = spritesheet.spritestripanim(
             self._spritesheet_filename,
             (0, 3 * self._sprite_height, self._sprite_width, self._sprite_height),
-            frames, ALPHA_COLOUR, True, animation_speed
+            self._frames, ALPHA_COLOUR, True, self._animation_speed
         )
         self._image = self._spritesdown.next()
         self.velocity = [0, 0]

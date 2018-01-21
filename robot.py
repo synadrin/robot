@@ -39,7 +39,7 @@ class robot_game(object):
         #TODO: No hardcoded values
         self._ui_spritesheet = spritesheet.spritesheet('ui.png')
         self._ui_images = self._ui_spritesheet.load_all(
-            (0, 0, 32, 32),
+            (0, 0, DEFAULT_SPRITE_WIDTH, DEFAULT_SPRITE_HEIGHT),
             ALPHA_COLOUR
         )
 
