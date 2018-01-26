@@ -1,0 +1,9 @@
+{
+	"name": "Arm",
+	"spritesheet": "w_arm-spritesheet.png",
+	"frames_per_row": 4,
+	"speed": 6,
+	"min_damage": 1,
+	"max_damage": 2,
+	"knockback": 350
+}
