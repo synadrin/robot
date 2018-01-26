@@ -335,6 +335,10 @@ class player(character):
             return image
 
     @property
+    def movement_blocked(self):
+        return super().movement_blocked or self.attacking
+
+    @property
     def health(self):
         return self._current_health
 
@@ -398,7 +402,9 @@ class player(character):
             self.velocity[1] = knockback[1]
 
     def attack(self):
-        self.weapon.attack(self._direction)
+        if not self.movement_blocked:
+            self.stop_moving()
+            self.weapon.attack(self._direction)
 
 
 class npc(character):
