@@ -280,6 +280,10 @@ class player(character):
         self.max_health = self._properties['health'] \
             if 'health' in self._properties else 1
         self._current_health = self.max_health
+
+        self.weapon = weapon(self._properties['weapon']) \
+            if 'weapon' in self._properties else None
+
         # Sprite used for "blinking" when damaged
         self._blink_image = pygame.Surface(
             (self._sprite_width, self._sprite_height)
@@ -292,7 +296,10 @@ class player(character):
         if self.invulnerable and int(self._invulnerability_timer * 10) % 2 == 0:
             return self._blink_image
         else:
-            return super().image
+            image = copy.copy(super().image)
+            if self.attacking:
+                image.blit(self.weapon.image, (0, 0))
+            return image
 
     @property
     def health(self):
@@ -306,6 +313,17 @@ class player(character):
     @property
     def invulnerable(self):
         return self._invulnerability_timer > 0
+
+    @property
+    def attacking(self):
+        try:
+            return self.weapon.attacking
+        except AttributeError:
+            return False
+
+    @property
+    def damage(self):
+        return self.weapon.damage if self.weapon else 0
 
     def update_interaction_rect(self):
         self.interaction_rect.topleft = self._position[:]
@@ -332,6 +350,7 @@ class player(character):
         super().update(dt)
         self.update_interaction_rect()
         self.update_invulerability(dt)
+        self.weapon.update(dt)
 
     def move_back(self, dt):
         super().move_back(dt)
@@ -344,6 +363,9 @@ class player(character):
             self._invulnerability_timer = INVULNERABILITY_TIME
             self.velocity[0] = knockback[0]
             self.velocity[1] = knockback[1]
+
+    def attack(self):
+        self.weapon.attack(self._direction)
 
 
 class npc(character):

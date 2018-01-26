@@ -218,6 +218,9 @@ class robot_game(object):
         else:
             self.interaction()
 
+    def _button_attack(self):
+        self.hero.attack()
+
     def _button_up(self):
         print("UP")
 
@@ -256,6 +259,9 @@ class robot_game(object):
 
                 elif event.key == K_SPACE:
                     self._button_action()
+
+                elif event.key == K_x:
+                    self._button_attack()
 
             # this will be handled if the window is resized
             elif event.type == VIDEORESIZE:
