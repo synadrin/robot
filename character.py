@@ -31,6 +31,9 @@ class base_sprite(pygame.sprite.Sprite):
             if 'name' in sprite_info else '?????'
         self._spritesheet_filename = sprite_info['spritesheet'] \
             if 'spritesheet' in sprite_info else None
+        self._spritesheet = spritesheet.spritesheet(
+            self._spritesheet_filename
+        )
         self._sprite_width = sprite_info['sprite_width'] \
             if 'sprite_width' in sprite_info else DEFAULT_SPRITE_WIDTH
         self._sprite_height = sprite_info['sprite_height'] \
@@ -195,9 +198,6 @@ class weapon(base_sprite):
         self._max_damage = self._properties['max_damage'] \
             if 'max_damage' in self._properties else 1
 
-        self._spritesheet  = spritesheet.spritesheet(
-            self._spritesheet_filename
-        )
         self.sprites = {}
         self.sprites[direction.DOWN] = self._spritesheet.load_strip(
             (0, self._sprite_height, self._sprite_width, self._sprite_height),
@@ -291,14 +291,47 @@ class player(character):
         self._blink_image.fill(ALPHA_COLOUR)
         self._blink_image.set_colorkey(ALPHA_COLOUR)
 
+        # Attacking sprites
+        self._attacking_sprites = {}
+        self._attacking_sprites[direction.DOWN] = self._spritesheet.image_at(
+            (
+                self._frames * self._sprite_width, 0,
+                self._sprite_width, self._sprite_height
+            ), ALPHA_COLOUR
+        )
+        self._attacking_sprites[direction.LEFT] = self._spritesheet.image_at(
+            (
+                self._frames * self._sprite_width, self._sprite_height,
+                self._sprite_width, self._sprite_height
+            ), ALPHA_COLOUR
+        )
+        self._attacking_sprites[direction.RIGHT] = self._spritesheet.image_at(
+            (
+                self._frames * self._sprite_width, 2 * self._sprite_height,
+                self._sprite_width, self._sprite_height
+            ), ALPHA_COLOUR
+        )
+        self._attacking_sprites[direction.UP] = self._spritesheet.image_at(
+            (
+                self._frames * self._sprite_width, 3 * self._sprite_height,
+                self._sprite_width, self._sprite_height
+            ), ALPHA_COLOUR
+        )
+
     @property
     def image(self):
         if self.invulnerable and int(self._invulnerability_timer * 10) % 2 == 0:
             return self._blink_image
         else:
-            image = copy.copy(super().image)
             if self.attacking:
-                image.blit(self.weapon.image, (0, 0))
+                if self._direction == direction.UP:
+                    image = copy.copy(self.weapon.image)
+                    image.blit(self._attacking_sprites[self._direction], (0, 0))
+                else:
+                    image = copy.copy(self._attacking_sprites[self._direction])
+                    image.blit(self.weapon.image, (0, 0))
+            else:
+                image = super().image
             return image
 
     @property
