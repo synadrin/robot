@@ -1,7 +1,8 @@
 from enum import Enum
+import copy
+import json
 import math
 import os.path
-import json
 import random
 
 import pygame
@@ -177,6 +178,95 @@ class character(base_sprite):
 
     def block_movement(self, duration):
         self._movement_blocked_timer = duration
+
+
+class weapon(base_sprite):
+    def __init__(self, filename):
+        super().__init__('w', filename)
+
+        self._direction = direction.DOWN
+
+        self.speed = self._properties['speed'] \
+            if 'speed' in self._properties else WEAPON_SPEED_MIN
+        self.knockback = self._properties['knockback'] \
+            if 'knockback' in self._properties else 0
+        self._min_damage = self._properties['min_damage'] \
+            if 'min_damage' in self._properties else 1
+        self._max_damage = self._properties['max_damage'] \
+            if 'max_damage' in self._properties else 1
+
+        self._spritesheet  = spritesheet.spritesheet(
+            self._spritesheet_filename
+        )
+        self.sprites = {}
+        self.sprites[direction.DOWN] = self._spritesheet.load_strip(
+            (0, self._sprite_height, self._sprite_width, self._sprite_height),
+            self._frames, ALPHA_COLOUR
+        )
+        self.sprites[direction.LEFT] = self._spritesheet.load_strip(
+            (0, 2 * self._sprite_height, self._sprite_width, self._sprite_height),
+            self._frames, ALPHA_COLOUR
+        )
+        self.sprites[direction.RIGHT] = self._spritesheet.load_strip(
+            (0, 3 * self._sprite_height, self._sprite_width, self._sprite_height),
+            self._frames, ALPHA_COLOUR
+        )
+        self.sprites[direction.UP] = self._spritesheet.load_strip(
+            (0, 4 * self._sprite_height, self._sprite_width, self._sprite_height),
+            self._frames, ALPHA_COLOUR
+        )
+
+        self._timer = 0.0
+        self._current_image_index = 0
+        self._image = self.sprites[self._direction][self._current_image_index]
+
+    @property
+    def speed(self):
+        return self._speed
+
+    @speed.setter
+    def speed(self, value):
+        self._speed = max(value, WEAPON_SPEED_MIN)
+        self._speed = min(self._speed, WEAPON_SPEED_MAX)
+
+        speed_increment = (WEAPON_SPEED_SLOWEST - WEAPON_SPEED_FASTEST) \
+            / (WEAPON_SPEED_MAX - WEAPON_SPEED_MIN)
+        self._animation_speed = WEAPON_SPEED_SLOWEST \
+            - ((self._speed - 1) * speed_increment)
+
+    @property
+    def damage(self):
+        return random.randint(self._min_damage, self._max_damage)
+
+    @property
+    def attacking(self):
+        return self._timer > 0
+
+    @property
+    def current_image_index(self):
+        return self._current_image_index
+
+    @current_image_index.setter
+    def current_image_index(self, value):
+        self._current_image_index = max(value, 0)
+        self._current_image_index = min(
+            self._current_image_index, self._frames - 1
+        )
+
+    def attack(self, direction):
+        self._direction = direction
+        self._timer = self._animation_speed
+
+    def update(self, dt):
+        if self.attacking:
+            self._timer -= dt
+            if self._timer < 0:
+                self._timer = 0
+            time_passed = self._animation_speed - self._timer
+            self.current_image_index = math.floor(
+                time_passed / (self._animation_speed / self._frames)
+            )
+            self._image = self.sprites[self._direction][self.current_image_index]
 
 
 class player(character):
