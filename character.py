@@ -35,10 +35,18 @@ class base_sprite(pygame.sprite.Sprite):
         self._sprite_height = sprite_info['sprite_height'] \
             if 'sprite_height' in sprite_info else DEFAULT_SPRITE_HEIGHT
         self._animation_speed = sprite_info['animation_speed'] \
-            if 'animation_speed' in sprite_info else -1
+            if 'animation_speed' in sprite_info else 0
         self._frames = sprite_info['frames_per_row'] \
             if 'frames_per_row' in sprite_info else None
         self._properties = sprite_info
+
+    @property
+    def image(self):
+        return self._image
+
+    @property
+    def animation_frames(self):
+        return self._animation_speed * TARGET_FPS
 
 
 class character(base_sprite):
@@ -70,27 +78,26 @@ class character(base_sprite):
 
         if self._animation_speed <= 0:
             self._animation_speed = (1.0 / move_speed) * BASE_ANIMATION_SPEED
-        self._animation_speed *= TARGET_FPS
 
         self._spritesdown = spritesheet.spritestripanim(
             self._spritesheet_filename,
             (0, 0, self._sprite_width, self._sprite_height),
-            self._frames, ALPHA_COLOUR, True, self._animation_speed
+            self._frames, ALPHA_COLOUR, True, self.animation_frames
         )
         self._spritesleft = spritesheet.spritestripanim(
             self._spritesheet_filename,
             (0, self._sprite_height, self._sprite_width, self._sprite_height),
-            self._frames, ALPHA_COLOUR, True, self._animation_speed
+            self._frames, ALPHA_COLOUR, True, self.animation_frames
         )
         self._spritesright = spritesheet.spritestripanim(
             self._spritesheet_filename,
             (0, 2 * self._sprite_height, self._sprite_width, self._sprite_height),
-            self._frames, ALPHA_COLOUR, True, self._animation_speed
+            self._frames, ALPHA_COLOUR, True, self.animation_frames
         )
         self._spritesup = spritesheet.spritestripanim(
             self._spritesheet_filename,
             (0, 3 * self._sprite_height, self._sprite_width, self._sprite_height),
-            self._frames, ALPHA_COLOUR, True, self._animation_speed
+            self._frames, ALPHA_COLOUR, True, self.animation_frames
         )
         self._image = self._spritesdown.next()
         self.velocity = [0, 0]
@@ -107,10 +114,6 @@ class character(base_sprite):
     @position.setter
     def position(self, value):
         self._position = list(value)
-
-    @property
-    def image(self):
-        return self._image
 
     @property
     def movement_blocked(self):
@@ -161,7 +164,7 @@ class character(base_sprite):
             self.velocity[0] = -self._speed
             self._image = self._spritesleft.next()
             self._direction = direction.LEFT
-    
+
     def move_right(self):
         if not self.movement_blocked:
             self.velocity[0] = self._speed
@@ -183,6 +186,7 @@ class player(character):
         self.interaction_rect = pygame.Rect(
             0, 0, self.rect.width * 0.5, self.rect.height
         )
+
         self.max_health = self._properties['health'] \
             if 'health' in self._properties else 1
         self._current_health = self.max_health
@@ -195,7 +199,7 @@ class player(character):
 
     @property
     def image(self):
-        if self.is_invulnerable and int(self._invulnerability_timer * 10) % 2 == 0:
+        if self.invulnerable and int(self._invulnerability_timer * 10) % 2 == 0:
             return self._blink_image
         else:
             return super().image
@@ -206,12 +210,11 @@ class player(character):
 
     @health.setter
     def health(self, value):
-        self._current_health = value
-        if self._current_health < 0:
-            self._current_health = 0
+        self._current_health = max(value, 0)
+        self._current_health = min(self._current_health, self.max_health)
 
     @property
-    def is_invulnerable(self):
+    def invulnerable(self):
         return self._invulnerability_timer > 0
 
     def update_interaction_rect(self):
@@ -245,7 +248,7 @@ class player(character):
         self.update_interaction_rect()
 
     def take_damage(self, damage, knockback):
-        if not self.is_invulnerable:
+        if not self.invulnerable:
             self.health -= damage
             self.block_movement(KNOCKBACK_TIME)
             self._invulnerability_timer = INVULNERABILITY_TIME
