@@ -216,7 +216,6 @@ class weapon(base_sprite):
             self._hitboxes[direction.UP] = pygame.Rect(
                 x, y, w, h
             )
-            print(self._hitboxes)
         else:
             raise KeyError("Weapon missing hitbox")
 
@@ -274,6 +273,10 @@ class weapon(base_sprite):
         self._current_image_index = min(
             self._current_image_index, self._frames - 1
         )
+
+    @property
+    def hitbox(self):
+        return self._hitboxes[self._direction]
 
     def attack(self, direction):
         self._direction = direction
