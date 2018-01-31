@@ -198,6 +198,28 @@ class weapon(base_sprite):
         self._max_damage = self._properties['max_damage'] \
             if 'max_damage' in self._properties else 1
 
+        self._hitboxes = {}
+        if 'hitbox' in self._properties:
+            x = self._properties['hitbox']['x']
+            y = self._properties['hitbox']['y']
+            w = self._properties['hitbox']['width']
+            h = self._properties['hitbox']['height']
+            self._hitboxes[direction.DOWN] = pygame.Rect(
+                (-x - w), (-y + h), w, h
+            )
+            self._hitboxes[direction.LEFT] = pygame.Rect(
+                -y, (x + w), h, w
+            )
+            self._hitboxes[direction.RIGHT] = pygame.Rect(
+                (-y + h), -x, h, w
+            )
+            self._hitboxes[direction.UP] = pygame.Rect(
+                x, y, w, h
+            )
+            print(self._hitboxes)
+        else:
+            raise KeyError("Weapon missing hitbox")
+
         self.sprites = {}
         self.sprites[direction.DOWN] = self._spritesheet.load_strip(
             (0, self._sprite_height, self._sprite_width, self._sprite_height),

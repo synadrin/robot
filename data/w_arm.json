@@ -5,5 +5,12 @@
 	"speed": 6,
 	"min_damage": 1,
 	"max_damage": 2,
-	"knockback": 350
+	"knockback": 350,
+
+	"hitbox": {
+		"x": -16,
+		"y": 16,
+		"width": 32,
+		"height": 16
+	}
 }
