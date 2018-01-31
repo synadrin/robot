@@ -384,6 +384,18 @@ class player(character):
             return False
 
     @property
+    def hitbox(self):
+        if self.attacking:
+            return pygame.Rect(
+                self.position[0] + self.weapon.hitbox.x,
+                self.position[1] + self.weapon.hitbox.y,
+                self.weapon.hitbox.width,
+                self.weapon.hitbox.height
+            )
+        else:
+            return pygame.Rect(0, 0, 0, 0)
+
+    @property
     def damage(self):
         return self.weapon.damage if self.weapon else 0
 
@@ -559,6 +571,15 @@ class enemy(npc):
             return super().current_goal
 
     @property
+    def health(self):
+        return self._current_health
+
+    @health.setter
+    def health(self, value):
+        self._current_health = max(value, 0)
+        self._current_health = min(self._current_health, self._max_health)
+
+    @property
     def damage(self):
         return random.randint(self._min_damage, self._max_damage)
 
@@ -566,3 +587,9 @@ class enemy(npc):
         delta_x = math.fabs(target[0] - self.position[0])
         delta_y = math.fabs(target[1] - self.position[1])
         return math.sqrt(delta_x**2 + delta_y**2) <= self._threat_range
+
+    def take_damage(self, damage, knockback):
+        self.health -= damage
+        self.block_movement(KNOCKBACK_TIME)
+        self.velocity[0] = knockback[0]
+        self.velocity[1] = knockback[1]
