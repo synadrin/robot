@@ -208,14 +208,15 @@ class weapon(base_sprite):
                 (-x - w), (-y + h), w, h
             )
             self._hitboxes[direction.LEFT] = pygame.Rect(
-                -y, (x + w), h, w
+                -y, (-x - w), h, w
             )
             self._hitboxes[direction.RIGHT] = pygame.Rect(
-                (-y + h), -x, h, w
+                (-y + h), x, h, w
             )
             self._hitboxes[direction.UP] = pygame.Rect(
-                x, y, w, h
+                x, -y, w, h
             )
+            print(self._hitboxes)
         else:
             raise KeyError("Weapon missing hitbox")
 
@@ -387,8 +388,8 @@ class player(character):
     def hitbox(self):
         if self.attacking:
             return pygame.Rect(
-                self.position[0] + self.weapon.hitbox.x,
-                self.position[1] + self.weapon.hitbox.y,
+                self.rect.centerx + self.weapon.hitbox.x,
+                self.rect.centery + self.weapon.hitbox.y,
                 self.weapon.hitbox.width,
                 self.weapon.hitbox.height
             )
