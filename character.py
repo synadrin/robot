@@ -111,6 +111,11 @@ class character(base_sprite):
         self.feet = pygame.Rect(0, 0, self.rect.width * .5, self.rect.height / 4)
         self._movement_blocked_timer = 0.0
 
+        self.max_health = self._properties['health'] \
+            if 'health' in self._properties else 1
+        self._current_health = self.max_health
+
+
     @property
     def position(self):
         return list(self._position)
@@ -122,6 +127,15 @@ class character(base_sprite):
     @property
     def movement_blocked(self):
         return self._movement_blocked_timer > 0
+
+    @property
+    def health(self):
+        return self._current_health
+
+    @health.setter
+    def health(self, value):
+        self._current_health = max(value, 0)
+        self._current_health = min(self._current_health, self.max_health)
 
     def update_movement_blocked(self, dt):
         self._movement_blocked_timer -= dt
@@ -302,10 +316,6 @@ class player(character):
             0, 0, self.rect.width * 0.5, self.rect.height
         )
 
-        self.max_health = self._properties['health'] \
-            if 'health' in self._properties else 1
-        self._current_health = self.max_health
-
         self.weapon = weapon(self._properties['weapon']) \
             if 'weapon' in self._properties else None
 
@@ -362,15 +372,6 @@ class player(character):
     @property
     def movement_blocked(self):
         return super().movement_blocked or self.attacking
-
-    @property
-    def health(self):
-        return self._current_health
-
-    @health.setter
-    def health(self, value):
-        self._current_health = max(value, 0)
-        self._current_health = min(self._current_health, self.max_health)
 
     @property
     def invulnerable(self):
@@ -550,9 +551,6 @@ class npc(character):
 class enemy(npc):
     def __init__(self, filename, path):
         super().__init__(filename, path)
-        self._max_health = self._properties['health'] \
-            if 'health' in self._properties else 1
-        self._current_health = self._max_health
         self._min_damage = self._properties['min_damage'] \
             if 'min_damage' in self._properties else 0
         self._max_damage = self._properties['max_damage'] \
@@ -569,15 +567,6 @@ class enemy(npc):
             return self.threat_target
         else:
             return super().current_goal
-
-    @property
-    def health(self):
-        return self._current_health
-
-    @health.setter
-    def health(self, value):
-        self._current_health = max(value, 0)
-        self._current_health = min(self._current_health, self._max_health)
 
     @property
     def damage(self):
