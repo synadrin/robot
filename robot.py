@@ -303,8 +303,7 @@ class robot_game(object):
         for npc in self.npcs:
             if npc.feet.colliderect(self.hero.feet):
                 npc.move_back(dt)
-                #TODO: Hero and NPC collision without getting stuck
-                #self.hero.move_back(dt)
+                self.hero.move_back(dt)
         for enemy in self.enemies:
             if enemy.rect.colliderect(self.hero.hitbox):
                 enemy.take_damage(
