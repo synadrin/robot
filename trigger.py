@@ -1,7 +1,7 @@
 import pygame
 
 
-class event(pygame.Rect):
+class trigger(pygame.Rect):
 
     def __init__(self, x, y, width, height, properties):
         super().__init__(x, y, width, height)

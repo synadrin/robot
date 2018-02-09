@@ -10,7 +10,7 @@ from constants import *
 from functions import *
 import spritesheet
 import character
-import event
+import trigger
 import pathfinding
 
 
@@ -76,7 +76,7 @@ class robot_game(object):
         self.walls = list()
         self.npcs = list()
         self.enemies = list()
-        self.events = list()
+        self.triggers = list()
         temp_npcs = list()
         # Also a pathfinding grid
         self.pathfinding_grid = pathfinding.weighted_grid(
@@ -98,8 +98,8 @@ class robot_game(object):
             elif object.type == 'npc' or object.type == 'enemy':
                 # Process NPCs and enemies after walls are determined
                 temp_npcs.append(object)
-            elif object.type == 'event':
-                self.events.append(event.event(
+            elif object.type == 'trigger':
+                self.triggers.append(trigger.trigger(
                     object.x, object.y,
                     object.width, object.height,
                     object.properties))
@@ -207,9 +207,9 @@ class robot_game(object):
                 + self.npcs[index].dialogue)
         else:
             # Events, objects
-            index = self.hero.interaction_rect.collidelist(self.events)
+            index = self.hero.interaction_rect.collidelist(self.triggers)
             if index > -1:
-                self.display_text(self.events[index].on_interact)
+                self.display_text(self.triggers[index].on_interact)
 
     def _button_action(self):
         if self._waiting:
