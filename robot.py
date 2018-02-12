@@ -65,8 +65,8 @@ class robot_game(object):
         # layer for sprites as 2
         self.group = PyscrollGroup(map_layer=self.map_layer, default_layer=2)
 
-        # put the hero in tile named "player_start"
-        player_start = tmx_data.get_object_by_name('player_start')
+        # put the hero in tile with name matching MAP_ENTRANCE
+        player_start = tmx_data.get_object_by_name(MAP_ENTRANCE)
         self.hero.position = [player_start.x, player_start.y]
 
         # add our hero to the group
