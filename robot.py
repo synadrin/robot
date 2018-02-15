@@ -43,9 +43,9 @@ class robot_game(object):
         )
 
         # Load the default map
-        self.load_map(DEFAULT_MAP)
+        self.load_map(DEFAULT_MAP, MAP_ENTRANCE)
 
-    def load_map(self, name):
+    def load_map(self, name, entrance_name):
         filename = get_map(name)
 
         # load data from pytmx
@@ -65,8 +65,8 @@ class robot_game(object):
         # layer for sprites as 2
         self.group = PyscrollGroup(map_layer=self.map_layer, default_layer=2)
 
-        # put the hero in tile with name matching MAP_ENTRANCE
-        player_start = tmx_data.get_object_by_name(MAP_ENTRANCE)
+        # put the hero in tile with name matching entrance_name
+        player_start = tmx_data.get_object_by_name(entrance_name)
         self.hero.position = [player_start.x, player_start.y]
 
         # add our hero to the group
