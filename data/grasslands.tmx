@@ -109,7 +109,8 @@
   </object>
   <object id="57" name="door5" type="trigger" x="1120" y="1152" width="32" height="32">
    <properties>
-    <property name="on_interact" value="This door is just painted on."/>
+    <property name="message_text" value="This door is just painted on."/>
+    <property name="on_interact" value="message"/>
    </properties>
   </object>
   <object id="59" name="enemy1" type="enemy" x="704" y="1216" width="32" height="32">

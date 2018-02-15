@@ -30,5 +30,5 @@ Custom Properties
 
 ### Actions
 
-* `message`
+* `message` - Displays the contents of `message_text` custom property.
 * `load_map` - TODO: not implemented

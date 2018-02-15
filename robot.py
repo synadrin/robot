@@ -209,7 +209,12 @@ class robot_game(object):
             # Events, objects
             index = self.hero.interaction_rect.collidelist(self.triggers)
             if index > -1:
-                self.display_text(self.triggers[index].on_interact)
+                trigger = self.triggers[index]
+                if trigger.on_interact == 'message':
+                    self.display_text(trigger.message_text)
+                elif trigger.on_interact == 'load_map':
+                    #TODO: Load map
+                    pass
 
     def _button_action(self):
         if self._waiting:
