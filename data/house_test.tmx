@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="6" height="5" tilewidth="32" tileheight="32" nextobjectid="10">
+ <tileset firstgid="1" source="desert.tsx"/>
+ <tileset firstgid="49" source="revolution_town.tsx"/>
+ <layer name="under0" width="6" height="5">
+  <data encoding="base64" compression="zlib">
+   eJxjYMANuNAwueLYAAAdiAB5
+  </data>
+ </layer>
+ <layer name="under1" width="6" height="5">
+  <data encoding="base64" compression="zlib">
+   eJxjYGBgCEbD9AAAjyABTQ==
+  </data>
+ </layer>
+ <layer name="sprites" width="6" height="5">
+  <data encoding="base64" compression="zlib">
+   eJxjYKAPiEPjAwAGWABf
+  </data>
+ </layer>
+ <objectgroup name="walls">
+  <object id="1" type="wall" x="0" y="0" width="32" height="160"/>
+  <object id="4" type="wall" x="32" y="128" width="128" height="32"/>
+  <object id="5" type="wall" x="32" y="0" width="128" height="32"/>
+  <object id="6" type="wall" x="160" y="0" width="32" height="160"/>
+ </objectgroup>
+ <objectgroup name="triggers">
+  <object id="7" name="in" type="entrance" x="64" y="96" width="32" height="32"/>
+  <object id="9" name="door" type="trigger" x="64" y="128" width="32" height="32">
+   <properties>
+    <property name="message_text" value="Oh no! The door is locked."/>
+    <property name="on_interact" value="message"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
