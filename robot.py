@@ -213,8 +213,7 @@ class robot_game(object):
                 if trigger.on_interact == 'message':
                     self.display_text(trigger.message_text)
                 elif trigger.on_interact == 'load_map':
-                    #TODO: Load map
-                    pass
+                    self.load_map(trigger.map_name, trigger.entrance_name)
 
     def _button_action(self):
         if self._waiting:

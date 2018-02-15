@@ -12,5 +12,10 @@ class trigger(pygame.Rect):
             if 'on_exit' in properties else None
         self.on_interact = properties['on_interact'] \
             if 'on_interact' in properties else None
+
+        self.entrance_name = properties['entrance_name'] \
+            if 'entrance_name' in properties else None
+        self.map_name = properties['map_name'] \
+            if 'map_name' in properties else None
         self.message_text = properties['message_text'] \
             if 'message_text' in properties else None
