@@ -12,9 +12,15 @@ The bottom two layers are always behind characters.
 
 ### Properties
 
-`Name`
-`Type`
-Custom Properties
+* `Name`
+* `Type`
+* Custom Properties:
+    * `entrance_name`
+    * `map_name`
+    * `message_text`
+    * `on_enter`
+    * `on_exit`
+    * `on_interact`
 
 ### Types
 
@@ -31,4 +37,5 @@ Custom Properties
 ### Actions
 
 * `message` - Displays the contents of `message_text` custom property.
-* `load_map` - TODO: not implemented
+* `load_map` - Loads the map given in `map_name` and places the
+  player at the `entrance` named `entrance_name`.
