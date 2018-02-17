@@ -27,8 +27,9 @@
   <object id="7" name="in" type="entrance" x="64" y="96" width="32" height="32"/>
   <object id="9" name="door" type="trigger" x="64" y="128" width="32" height="32">
    <properties>
-    <property name="message_text" value="Oh no! The door is locked."/>
-    <property name="on_interact" value="message"/>
+    <property name="entrance_name" value="door4_out"/>
+    <property name="map_name" value="grasslands"/>
+    <property name="on_interact" value="load_map"/>
    </properties>
   </object>
  </objectgroup>
