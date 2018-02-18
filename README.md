@@ -13,10 +13,14 @@
 ### Windows
 
 1. Install Python.
-    a. Visit <https://www.python.org/downloads/windows/>
-    b. Download the latest Python 3 release: *Windows x86-64 executable installer*
-    c. Run the installer and follow the wizard.  
+
+    1. Visit <https://www.python.org/downloads/windows/>
+
+    2. Download the latest Python 3 release: *Windows x86-64 executable installer*
+
+    3. Run the installer and follow the wizard.  
        The default options are fine.
+
 2. Run `install.bat`.  
    This will install all the needed Python modules.
 
