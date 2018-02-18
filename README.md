@@ -29,3 +29,12 @@
 ### Windows
 
 Launch `run.bat` by double-clicking the file.
+
+### Controls
+
+* Keyboard
+    * Movement: arrow keys
+    * Interact: spacebar
+    * Attack: X
+* Gamepad
+    * TODO
