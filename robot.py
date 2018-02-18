@@ -10,7 +10,7 @@ from constants import *
 from functions import *
 import spritesheet
 import character
-import event
+import trigger
 import pathfinding
 
 
@@ -43,9 +43,9 @@ class robot_game(object):
         )
 
         # Load the default map
-        self.load_map(DEFAULT_MAP)
+        self.load_map(DEFAULT_MAP, MAP_ENTRANCE)
 
-    def load_map(self, name):
+    def load_map(self, name, entrance_name):
         filename = get_map(name)
 
         # load data from pytmx
@@ -65,8 +65,8 @@ class robot_game(object):
         # layer for sprites as 2
         self.group = PyscrollGroup(map_layer=self.map_layer, default_layer=2)
 
-        # put the hero in tile named "player_start"
-        player_start = tmx_data.get_object_by_name('player_start')
+        # put the hero in tile with name matching entrance_name
+        player_start = tmx_data.get_object_by_name(entrance_name)
         self.hero.position = [player_start.x, player_start.y]
 
         # add our hero to the group
@@ -76,7 +76,7 @@ class robot_game(object):
         self.walls = list()
         self.npcs = list()
         self.enemies = list()
-        self.events = list()
+        self.triggers = list()
         temp_npcs = list()
         # Also a pathfinding grid
         self.pathfinding_grid = pathfinding.weighted_grid(
@@ -98,8 +98,8 @@ class robot_game(object):
             elif object.type == 'npc' or object.type == 'enemy':
                 # Process NPCs and enemies after walls are determined
                 temp_npcs.append(object)
-            elif object.type == 'event':
-                self.events.append(event.event(
+            elif object.type == 'trigger':
+                self.triggers.append(trigger.trigger(
                     object.x, object.y,
                     object.width, object.height,
                     object.properties))
@@ -207,9 +207,13 @@ class robot_game(object):
                 + self.npcs[index].dialogue)
         else:
             # Events, objects
-            index = self.hero.interaction_rect.collidelist(self.events)
+            index = self.hero.interaction_rect.collidelist(self.triggers)
             if index > -1:
-                self.display_text(self.events[index].on_interact)
+                trigger = self.triggers[index]
+                if trigger.on_interact == 'message':
+                    self.display_text(trigger.message_text)
+                elif trigger.on_interact == 'load_map':
+                    self.load_map(trigger.map_name, trigger.entrance_name)
 
     def _button_action(self):
         if self._waiting:

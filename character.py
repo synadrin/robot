@@ -408,13 +408,13 @@ class player(character):
             self.interaction_rect.y -= self.interaction_rect.height
         elif self._direction == direction.DOWN:
             self.interaction_rect.height *= 0.5
-            self.interaction_rect.y += self.interaction_rect.height
+            self.interaction_rect.y += self.rect.height
         elif self._direction == direction.LEFT:
             self.interaction_rect.width *= 0.5
             self.interaction_rect.x -= self.interaction_rect.width
         elif self._direction == direction.RIGHT:
             self.interaction_rect.width *= 0.5
-            self.interaction_rect.x += self.interaction_rect.width
+            self.interaction_rect.x += self.rect.width
 
     def update_invulerability(self, dt):
         self._invulnerability_timer -= dt
