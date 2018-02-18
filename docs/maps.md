@@ -10,11 +10,15 @@ The bottom two layers are always behind characters.
 
 ## Objects
 
+Objects represent characters, walls, and triggers in the map.
+Generally, these are just rectangles in Tiled, with certain
+properties.
+
 ### Properties
 
-* `Name`
-* `Type`
-* Custom Properties:
+* `Name` - The name of the object. This usually matches a resource filename.
+* `Type` - The type of object. See below for accepted types.
+* Custom Properties - These are specific to certain types.
     * `entrance_name`
     * `map_name`
     * `message_text`
@@ -24,15 +28,22 @@ The bottom two layers are always behind characters.
 
 ### Types
 
-* `wall`
-* `npc`
-* `enemy`
-* `trigger`
-    * `on_enter` - TODO: not implemented
-    * `on_exit` - TODO: not implemented
-    * `on_interact`
-* `entrance`
-    * Special: Name: `player_start`
+* `wall` - Defines an area which cannot be walked through.
+* `npc` - Defines an NPC, using the information found in
+  `data/c_NAME.json`.
+* `enemy` - Defines an Enemy, using the information found in
+  `data/c_NAME.json`.
+* `trigger` - Defines a trigger, which is something with which the
+  player can interact.
+    * `on_enter` - Performs the named `action` when the player steps
+      into this space (**not implemented**).
+    * `on_exit` - Performs the named `action` when the player steps
+      out of this space (**not implemented**).
+    * `on_interact` - Performs the named `action` when the player
+      faces the object and presses the interaction key.
+* `entrance` - Defines a location where a player can start when this
+  map is loaded.
+    * Special: Name: `player_start` - Default starting spot.
 
 ### Actions
 
