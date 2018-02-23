@@ -317,7 +317,7 @@ class robot_game(object):
                         self.hero.weapon.knockback
                     )
                 )
-            if enemy.feet.colliderect(self.hero.feet):
+            elif enemy.feet.colliderect(self.hero.feet):
                 enemy.move_back(dt)
                 self.hero.take_damage(
                     enemy.damage,

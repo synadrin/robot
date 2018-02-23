@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="32" tileheight="32" nextobjectid="63">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="32" tileheight="32" nextobjectid="67">
  <tileset firstgid="1" name="Revolution_Grasslands" tilewidth="32" tileheight="32" tilecount="190" columns="10">
   <image source="revolution_grasslands.png" trans="a349a4" width="320" height="608"/>
   <tile id="5">
@@ -116,5 +116,17 @@
    </properties>
   </object>
   <object id="61" name="door4_out" type="entrance" x="704" y="1184" width="32" height="32"/>
+  <object id="63" name="enemy1" type="enemy" x="832" y="1216" width="32" height="32">
+   <properties>
+    <property name="target_x" type="int" value="25"/>
+    <property name="target_y" type="int" value="38"/>
+   </properties>
+  </object>
+  <object id="64" name="enemy1" type="enemy" x="832" y="1344" width="32" height="32">
+   <properties>
+    <property name="target_x" type="int" value="26"/>
+    <property name="target_y" type="int" value="43"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>
