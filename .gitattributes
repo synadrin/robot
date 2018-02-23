@@ -1,0 +1,10 @@
+# Default behaviour
+* text=auto
+
+# Force CR/LF
+*.bat text eol=crlf
+*.md text eol=crlf
+*.txt text eol=crlf
+
+# Binary files
+*.png binary
