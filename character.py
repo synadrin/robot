@@ -137,6 +137,14 @@ class character(base_sprite):
         self._current_health = max(value, 0)
         self._current_health = min(self._current_health, self.max_health)
 
+    @property
+    def alive(self):
+        return self.health > 0
+
+    @property
+    def dead(self):
+        return not self.alive
+
     def update_movement_blocked(self, dt):
         self._movement_blocked_timer -= dt
         if self._movement_blocked_timer < 0:
