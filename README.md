@@ -16,7 +16,7 @@
 
     1. Visit <https://www.python.org/downloads/windows/>
 
-    2. Download the latest Python 3 release: *Windows x86-64 executable installer*
+    2. Download the latest Python 3 release: *Windows x86 executable installer*
 
     3. Run the installer and follow the wizard.  
        The default options are fine.
