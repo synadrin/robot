@@ -219,6 +219,8 @@ class robot_game(object):
         if self._waiting:
             #TODO: Move to next action
             self.clear_text()
+            if self.hero.dead:
+                self.running = False
         else:
             self.interaction()
 
@@ -236,6 +238,10 @@ class robot_game(object):
 
     def _button_right(self):
         print("RIGHT")
+
+    def game_over(self):
+        self.display_text(["GAME OVER",
+            ":[ :[ :[ :["])
 
     def handle_input(self):
         """ Handle pygame input events
@@ -326,6 +332,9 @@ class robot_game(object):
                     )
                 )
             enemy.threat_target = self.hero.position
+        # If the player is dead, game over
+        if self.hero.dead:
+            self.game_over()
 
     def run(self):
         """ Run the game loop
