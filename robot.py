@@ -315,7 +315,7 @@ class robot_game(object):
                 npc.move_back(dt)
                 self.hero.move_back(dt)
         for enemy in self.enemies:
-            if enemy.rect.colliderect(self.hero.hitbox):
+            if enemy.alive and enemy.rect.colliderect(self.hero.hitbox):
                 enemy.take_damage(
                     self.hero.damage,
                     calculate_knockback(
@@ -323,7 +323,9 @@ class robot_game(object):
                         self.hero.weapon.knockback
                     )
                 )
-            elif enemy.feet.colliderect(self.hero.feet):
+                if enemy.dead:
+                    enemy.remove(self.group)
+            elif enemy.alive and enemy.feet.colliderect(self.hero.feet):
                 enemy.move_back(dt)
                 self.hero.take_damage(
                     enemy.damage,
@@ -335,6 +337,7 @@ class robot_game(object):
         # If the player is dead, game over
         if self.hero.dead:
             self.game_over()
+
 
     def run(self):
         """ Run the game loop
