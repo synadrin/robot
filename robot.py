@@ -134,65 +134,6 @@ class robot_game(object):
                 self.enemies.append(enemy)
                 self.group.add(enemy)
 
-    def draw_text_box(self, surface, rect):
-        # Edges
-        ## Top
-        pygame.draw.rect(surface, DIALOG_BORDER, (
-                rect.x + DIALOG_BORDER_THICKNESS,
-                rect.y,
-                rect.width - (2 * DIALOG_BORDER_THICKNESS),
-                DIALOG_BORDER_THICKNESS
-            ), 0)
-        ## Right
-        pygame.draw.rect(surface, DIALOG_BORDER, (
-                rect.x + rect.width - DIALOG_BORDER_THICKNESS,
-                rect.y + DIALOG_BORDER_THICKNESS,
-                DIALOG_BORDER_THICKNESS,
-                rect.height - (2 * DIALOG_BORDER_THICKNESS)
-            ), 0)
-        ## Bottom
-        pygame.draw.rect(surface, DIALOG_BORDER, (
-                rect.x + DIALOG_BORDER_THICKNESS,
-                rect.y + rect.height - DIALOG_BORDER_THICKNESS,
-                rect.width - (2 * DIALOG_BORDER_THICKNESS),
-                DIALOG_BORDER_THICKNESS
-            ), 0)
-        ## Left
-        pygame.draw.rect(surface, DIALOG_BORDER, (
-                rect.x,
-                rect.y + DIALOG_BORDER_THICKNESS,
-                DIALOG_BORDER_THICKNESS,
-                rect.height - (2 * DIALOG_BORDER_THICKNESS)
-            ), 0)
-        # Corners
-        ## Top Left
-        pygame.draw.circle(surface, DIALOG_BORDER, (
-                rect.x + DIALOG_BORDER_THICKNESS,
-                rect.y + DIALOG_BORDER_THICKNESS,
-            ), DIALOG_BORDER_THICKNESS, 0)
-        ## Top Right
-        pygame.draw.circle(surface, DIALOG_BORDER, (
-                rect.x + rect.width - DIALOG_BORDER_THICKNESS,
-                rect.y + DIALOG_BORDER_THICKNESS,
-            ), DIALOG_BORDER_THICKNESS, 0)
-        ## Bottom Left
-        pygame.draw.circle(surface, DIALOG_BORDER, (
-                rect.x + DIALOG_BORDER_THICKNESS,
-                rect.y + rect.height - DIALOG_BORDER_THICKNESS,
-            ), DIALOG_BORDER_THICKNESS, 0)
-        ## Bottom Right
-        pygame.draw.circle(surface, DIALOG_BORDER, (
-                rect.x + rect.width - DIALOG_BORDER_THICKNESS,
-                rect.y + rect.height - DIALOG_BORDER_THICKNESS,
-            ), DIALOG_BORDER_THICKNESS, 0)
-        # Fill
-        pygame.draw.rect(surface, DIALOG_BACKGROUND, (
-                rect.x + DIALOG_BORDER_THICKNESS,
-                rect.y + DIALOG_BORDER_THICKNESS,
-                rect.width - (2 * DIALOG_BORDER_THICKNESS),
-                rect.height - (2 * DIALOG_BORDER_THICKNESS)
-            ), 0)
-
     def draw_text(self, surface):
         if self._text_set:
             vertical_offset = surface.get_height() * (1 - DIALOG_HEIGHT)
@@ -202,7 +143,7 @@ class robot_game(object):
             x = TEXT_SIZE
             font = pygame.font.Font(pygame.font.get_default_font(), TEXT_SIZE)
 
-            self.draw_text_box(surface, dialog_box)
+            draw_text_box(surface, dialog_box)
             for line in self._text_set:
                 text = font.render(line, 1, TEXT_COLOUR, TEXT_BACKGROUND)
                 surface.blit(text, (x, y))
