@@ -366,7 +366,7 @@ if __name__ == "__main__":
     pygame.init()
     pygame.font.init()
     scope = pyscope.pyscope()
-    pygame.display.set_caption(DISPLAY_NAME)
+    pygame.display.set_caption(DISPLAY_NAME + ' v' + GAME_VERSION)
 
     try:
         game = robot_game()
