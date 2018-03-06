@@ -33,7 +33,19 @@ def calculate_knockback(source, target, knockback_value):
     ]
 
 
+def rect_adjustment(surface, rect):
+    # Assume values (0 < w,h <= 1) are fractions of the whole window
+    if rect.width > 0 and rect.width <= 1:
+        rect.width = rect.width * surface.get_width()
+    if rect.height > 0 and rect.height <= 1:
+        rect.height = rect.height * surface.get_height()
+
+    return rect
+
+
 def draw_text_box(surface, rect):
+    rect = rect_adjustment(surface, rect)
+
     # Edges
     ## Top
     pygame.draw.rect(surface, DIALOG_BORDER, (
