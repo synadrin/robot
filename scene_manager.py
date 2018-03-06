@@ -30,5 +30,6 @@ class scene_manager(object):
         self.append(value)
 
     def draw_all(self, surface):
+        surface.fill((0, 0, 0))
         for scene in self._scenes:
             scene.draw(surface)
