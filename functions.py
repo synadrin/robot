@@ -13,9 +13,14 @@ def init_screen(width, height):
     return screen
 
 
+# Makes loading resources easier
+def get_resource_name(filename):
+    return os.path.join(RESOURCES_DIR, filename)
+
+
 # make loading maps a little easier
 def get_map(filename):
-    return os.path.join(RESOURCES_DIR, filename + '.tmx')
+    return get_resource_name(filename + '.tmx')
 
 
 # make loading images a little easier
@@ -34,7 +39,11 @@ def calculate_knockback(source, target, knockback_value):
 
 
 def rect_adjustment(surface, rect):
-    # Assume values (0 < w,h <= 1) are fractions of the whole window
+    # Assume values (0 < x,y,w,h <= 1) are fractions of the whole window
+    if rect.x > 0 and rect.x <= 1:
+        rect.x = rect.x * surface.get_width()
+    if rect.y > 0 and rect.y <= 1:
+        rect.y = rect.y * surface.get_width()
     if rect.width > 0 and rect.width <= 1:
         rect.width = rect.width * surface.get_width()
     if rect.height > 0 and rect.height <= 1:
