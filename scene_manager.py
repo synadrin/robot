@@ -1,5 +1,5 @@
 # Scene class components:
-# .manager
+# ._manager
 # .pause()
 # .resume()
 # .handle_input(events, pressed_keys)
@@ -30,5 +30,5 @@ class scene_manager(object):
         self.append(value)
 
     def draw_all(self, surface):
-        for scene in reversed(self._scenes):
+        for scene in self._scenes:
             scene.draw(surface)
