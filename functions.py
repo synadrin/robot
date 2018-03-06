@@ -1,4 +1,5 @@
 import os.path
+from enum import Enum
 import math
 
 import pygame
@@ -90,3 +91,42 @@ def draw_text_box(surface, rect):
             rect.width - (2 * DIALOG_BORDER_THICKNESS),
             rect.height - (2 * DIALOG_BORDER_THICKNESS)
         ), 0)
+
+
+def draw_text(surface, rect, text_list, colour):
+    y = rect.y + TEXT_SIZE
+    x = TEXT_SIZE
+    font = pygame.font.Font(pygame.font.get_default_font(), TEXT_SIZE)
+
+    for line in text_list:
+        text = font.render(line, 1, colour, TEXT_BACKGROUND)
+        surface.blit(text, (x, y))
+        y += text.get_height()
+
+
+# Input configuration
+R_INPUT_EVENT = pygame.USEREVENT + 1
+## Buttons
+class buttons(Enum):
+    R_UP = 1
+    R_RIGHT = 2
+    R_DOWN = 3
+    R_LEFT = 4
+    R_A = 5
+    R_B = 6
+    R_START = 7
+    R_SELECT = 8
+
+## Map from keyboard/joystick to buttons
+keyboard_map = {
+    pygame.K_UP: buttons.R_UP,
+    pygame.K_RIGHT: buttons.R_RIGHT,
+    pygame.K_DOWN: buttons.R_DOWN,
+    pygame.K_LEFT: buttons.R_LEFT,
+    pygame.K_z: buttons.R_B,
+    pygame.K_x: buttons.R_A,
+    pygame.K_RETURN: buttons.R_START,
+    pygame.K_RSHIFT: buttons.R_SELECT,
+}
+joystick_map = {
+}
