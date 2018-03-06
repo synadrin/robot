@@ -4,8 +4,9 @@ import pyscope
 from constants import *
 from functions import *
 import scene_manager
-import game_scene
 import menu_scene
+import text_scene
+import game_scene
 import character
 
 
@@ -26,7 +27,7 @@ class game_engine(object):
             START_MENU_IMAGE, START_MENU_RECT)
         start_menu.append("New Game", True, self.new_game)
         start_menu.append("Load Game", False, None)
-        start_menu.append("Credits", False, None)
+        start_menu.append("Credits", True, self.show_credits)
         start_menu.append("Quit", True,
             lambda: pygame.event.post(pygame.event.Event(pygame.QUIT)))
 
@@ -42,6 +43,16 @@ class game_engine(object):
     def load_game(self, save_name):
         # Load character data from saved game
         pass
+
+    def show_credits(self):
+        message_box = (0, 0, 1, 1)
+        self.scene_manager.append(
+            text_scene.text_scene(
+                self.scene_manager,
+                "CREDITS",
+                message_box
+            )
+        )
 
     def draw(self, surface):
         # Draw all scenes (from bottom to top)
