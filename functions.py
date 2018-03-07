@@ -39,15 +39,19 @@ def calculate_knockback(source, target, knockback_value):
 
 
 def rect_adjustment(surface, rect):
-    # Assume values (0 < x,y,w,h <= 1) are fractions of the whole window
-    if rect.x > 0 and rect.x <= 1:
-        rect.x = rect.x * surface.get_width()
-    if rect.y > 0 and rect.y <= 1:
-        rect.y = rect.y * surface.get_width()
-    if rect.width > 0 and rect.width <= 1:
-        rect.width = rect.width * surface.get_width()
-    if rect.height > 0 and rect.height <= 1:
-        rect.height = rect.height * surface.get_height()
+    if isinstance(rect, tuple):
+        x, y, w, h = rect
+        # Assume values (0 < x,y,w,h <= 1) are fractions of the whole window
+        if x > 0 and x <= 1:
+            x = x * surface.get_width()
+        if y > 0 and y <= 1:
+            y = y * surface.get_height()
+        if w > 0 and w <= 1:
+            w = w * surface.get_width()
+        if h > 0 and h <= 1:
+            h = h * surface.get_height()
+        rect = (x, y, w, h)
+        return pygame.Rect(rect)
 
     return rect
 
@@ -115,6 +119,8 @@ def draw_text_box(surface, rect):
 
 
 def draw_text(surface, rect, text_list, colour):
+    rect = rect_adjustment(surface, rect)
+
     y = rect.y + TEXT_SIZE
     x = TEXT_SIZE
     font = pygame.font.Font(pygame.font.get_default_font(), TEXT_SIZE)

@@ -17,7 +17,7 @@ class menu_scene(object):
         self._menu_items = []
         self.image = load_image(filename).convert()
         self.image.set_colorkey(ALPHA_COLOUR, pygame.RLEACCEL)
-        self.rect = pygame.Rect(rect)
+        self.rect = rect
         self._active_choice_index = 0
 
     @property
