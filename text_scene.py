@@ -11,7 +11,7 @@ class text_scene(object):
             self._text_list = text_list
         else:
             self._text_list = [text_list]
-        self.rect = pygame.Rect(rect)
+        self.rect = rect
 
     def pause(self):
         pass
