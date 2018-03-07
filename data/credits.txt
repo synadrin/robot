@@ -1,0 +1,11 @@
+Made by: CHAPPLE and Tim
+
+Using:
+> Python - https://www.python.org/
+>>  pygame - https://www.pygame.org/
+>>  PyTMX - https://github.com/bitcraft/PyTMX
+>>  pyscroll - https://github.com/bitcraft/pyscroll
+> Tiled - http://www.mapeditor.org/
+
+Assets from:
+> ?????

@@ -45,11 +45,15 @@ class game_engine(object):
         pass
 
     def show_credits(self):
-        message_box = (0, 0, 1, 1)
+        credits = []
+        with open(get_resource_name(CREDITS_FILE)) as f:
+            credits = f.readlines()
+        credits = [line.strip() for line in credits]
+        message_box = (0, 0.5, 1, 0.5)
         self.scene_manager.append(
             text_scene.text_scene(
                 self.scene_manager,
-                "CREDITS",
+                credits,
                 message_box
             )
         )
