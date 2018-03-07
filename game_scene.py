@@ -14,12 +14,12 @@ import pathfinding
 
 
 class game_scene(object):
-    def __init__(self):
+    def __init__(self, manager, engine):
+        self._manager = manager
+        self._engine = engine
+
         # True when waiting on the player input (dialogue, menu, etc)
         self._waiting = False
-
-        # List used for displaying lines of text
-        self._text_set = []
 
         # Load images for UI
         self._ui_spritesheet = spritesheet.spritesheet('ui.png')
@@ -29,9 +29,13 @@ class game_scene(object):
         )
 
         # Load the default map
-        self.load_map(DEFAULT_MAP, MAP_ENTRANCE)
+        self.load_map(
+            DEFAULT_MAP,
+            MAP_ENTRANCE,
+            self._engine.screen.get_size()
+        )
 
-    def load_map(self, name, entrance_name):
+    def load_map(self, name, entrance_name, display_size):
         filename = get_map(name)
 
         # load data from pytmx
@@ -41,8 +45,12 @@ class game_scene(object):
         map_data = pyscroll.data.TiledMapData(tmx_data)
 
         # create new renderer (camera)
-        self.map_layer = pyscroll.BufferedRenderer(map_data,
-            scope.screen.get_size(), clamp_camera=True, tall_sprites=1)
+        self.map_layer = pyscroll.BufferedRenderer(
+            map_data,
+            display_size,
+            clamp_camera=True,
+            tall_sprites=1
+        )
         self.map_layer.zoom = 2
 
         # pyscroll supports layered rendering.  our map has 3 'under' layers
@@ -53,10 +61,10 @@ class game_scene(object):
 
         # put the hero in tile with name matching entrance_name
         player_start = tmx_data.get_object_by_name(entrance_name)
-        self.hero.position = [player_start.x, player_start.y]
+        self._engine.hero.position = [player_start.x, player_start.y]
 
         # add our hero to the group
-        self.group.add(self.hero)
+        self.group.add(self._engine.hero)
 
         # setup level geometry with simple pygame rects, loaded from pytmx
         self.walls = list()
@@ -121,20 +129,24 @@ class game_scene(object):
                 self.group.add(enemy)
 
     def interaction(self):
-        index = self.hero.interaction_rect.collidelist(self.npcs)
+        index = self._engine.hero.interaction_rect.collidelist(self.npcs)
         # NPC
         if index > -1:
             self.display_text(self.npcs[index].name + ': '
                 + self.npcs[index].dialogue)
         else:
             # Events, objects
-            index = self.hero.interaction_rect.collidelist(self.triggers)
+            index = self._engine.hero.interaction_rect.collidelist(self.triggers)
             if index > -1:
                 trigger = self.triggers[index]
                 if trigger.on_interact == 'message':
                     self.display_text(trigger.message_text)
                 elif trigger.on_interact == 'load_map':
-                    self.load_map(trigger.map_name, trigger.entrance_name)
+                    self.load_map(
+                        trigger.map_name,
+                        trigger.entrance_name,
+                        self._engine.screen.get_size()
+                    )
 
     def draw_text(self, surface):
         if self._text_set:
@@ -153,9 +165,9 @@ class game_scene(object):
 
     def draw_ui(self, surface):
         # Health
-        full_count = int(self.hero.health / 2)
-        half_count = self.hero.health % 2
-        empty_count = int((self.hero.max_health - self.hero.health) / 2)
+        full_count = int(self._engine.hero.health / 2)
+        half_count = self._engine.hero.health % 2
+        empty_count = int((self._engine.hero.max_health - self._engine.hero.health) / 2)
         for i in range(0, full_count):
             #x = surface.get_width() - ((i / 2 + 1) * self._ui_images[0].get_width())
             x = i * self._ui_images[2].get_width()
@@ -191,13 +203,13 @@ class game_scene(object):
         if self._waiting:
             #TODO: Move to next action
             self.clear_text()
-            if self.hero.dead:
+            if self._engine.hero.dead:
                 self.running = False
         else:
             self.interaction()
 
     def _button_attack(self):
-        self.hero.attack()
+        self._engine.hero.attack()
 
     def _button_up(self):
         print("UP")
@@ -251,18 +263,18 @@ class game_scene(object):
 #        if not self._waiting:
 #            pressed = pygame.key.get_pressed()
 #            if pressed[K_UP]:
-#                self.hero.move_up()
+#                self._engine.hero.move_up()
 #            elif pressed[K_DOWN]:
-#                self.hero.move_down()
+#                self._engine.hero.move_down()
 #            else:
-#                self.hero.stop_moving_vertical()
+#                self._engine.hero.stop_moving_vertical()
 #
 #            if pressed[K_LEFT]:
-#                self.hero.move_left()
+#                self._engine.hero.move_left()
 #            elif pressed[K_RIGHT]:
-#                self.hero.move_right()
+#                self._engine.hero.move_right()
 #            else:
-#                self.hero.stop_moving_horizontal()
+#                self._engine.hero.stop_moving_horizontal()
 
     def update(self, dt):
         """ Tasks that occur over time should be handled here
@@ -278,36 +290,36 @@ class game_scene(object):
                 sprite.move_back(dt)
         # Check if NPCs are colliding with the hero
         for npc in self.npcs:
-            if npc.feet.colliderect(self.hero.feet):
+            if npc.feet.colliderect(self._engine.hero.feet):
                 npc.move_back(dt)
-                self.hero.move_back(dt)
+                self._engine.hero.move_back(dt)
         for enemy in self.enemies:
-            if enemy.alive and enemy.rect.colliderect(self.hero.hitbox):
+            if enemy.alive and enemy.rect.colliderect(self._engine.hero.hitbox):
                 enemy.take_damage(
-                    self.hero.damage,
+                    self._engine.hero.damage,
                     calculate_knockback(
-                        self.hero.position, enemy.position,
-                        self.hero.weapon.knockback
+                        self._engine.hero.position, enemy.position,
+                        self._engine.hero.weapon.knockback
                     )
                 )
                 if enemy.dead:
                     enemy.remove(self.group)
-            elif enemy.alive and enemy.feet.colliderect(self.hero.feet):
+            elif enemy.alive and enemy.feet.colliderect(self._engine.hero.feet):
                 enemy.move_back(dt)
-                self.hero.take_damage(
+                self._engine.hero.take_damage(
                     enemy.damage,
                     calculate_knockback(
-                        enemy.position, self.hero.position, enemy.knockback
+                        enemy.position, self._engine.hero.position, enemy.knockback
                     )
                 )
-            enemy.threat_target = self.hero.position
+            enemy.threat_target = self._engine.hero.position
         # If the player is dead, game over
-        if self.hero.dead:
+        if self._engine.hero.dead:
             self.game_over()
 
     def draw(self, surface):
         # center the map/screen on our Hero
-        self.group.center(self.hero.rect.center)
+        self.group.center(self._engine.hero.rect.center)
 
         # draw the map and all sprites
         self.group.draw(surface)
