@@ -18,9 +18,12 @@ class game_engine(object):
     Finally, it uses a pyscroll group to render the map and Hero.
     """
 
-    def __init__(self):
+    def __init__(self, screen):
         # true while running
         self.running = False
+
+        # Main drawing area
+        self.screen = screen
 
         self.scene_manager = scene_manager.scene_manager()
         start_menu = menu_scene.menu_scene(scene_manager,
@@ -36,9 +39,12 @@ class game_engine(object):
         self.hero = None
 
     def new_game(self):
-        #self.hero = character.player(HERO_NAME)
+        self.hero = character.player(HERO_NAME)
+        self.scene_manager.append(game_scene.game_scene(
+            self.scene_manager,
+            self
+        ))
         # New game_scene with default settings
-        pass
 
     def load_game(self, save_name):
         # Load character data from saved game
@@ -131,22 +137,26 @@ class game_engine(object):
 
                 self.handle_input()
                 self.update(dt)
-                self.draw(scope.screen)
+                self.draw(self.screen)
                 pygame.display.flip()
 
         except KeyboardInterrupt:
             self.running = False
 
 
-if __name__ == "__main__":
+def main():
     pygame.init()
     pygame.font.init()
     scope = pyscope.pyscope()
     pygame.display.set_caption(DISPLAY_NAME + ' v' + GAME_VERSION)
 
     try:
-        game = game_engine()
+        game = game_engine(scope.screen)
         game.run()
     except:
         pygame.quit()
         raise
+
+
+if __name__ == "__main__":
+    main()
