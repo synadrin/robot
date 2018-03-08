@@ -64,10 +64,6 @@ class game_engine(object):
             )
         )
 
-    def draw(self, surface):
-        # Draw all scenes (from bottom to top)
-        self.scene_manager.draw_all(surface)
-
     def game_over(self):
         self.display_text(["GAME OVER",
             ":[ :[ :[ :["])
@@ -116,11 +112,6 @@ class game_engine(object):
                 filtered_events, filtered_pressed_keys
             )
 
-    def update(self, dt):
-        current_scene = self.scene_manager.current_scene
-        if current_scene:
-            current_scene.update(dt)
-
     def run(self):
         """ Run the game loop
         """
@@ -136,8 +127,8 @@ class game_engine(object):
                 times.append(clock.get_fps())
 
                 self.handle_input()
-                self.update(dt)
-                self.draw(self.screen)
+                self.scene_manager.update(dt)
+                self.scene_manager.draw(self.screen)
                 pygame.display.flip()
 
         except KeyboardInterrupt:

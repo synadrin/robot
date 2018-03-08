@@ -14,6 +14,7 @@ class menu_item(object):
 class menu_scene(object):
     def __init__(self, manager, filename, rect):
         self._manager = manager
+        self.finished = False
         self._menu_items = []
         self.image = load_image(filename).convert()
         self.image.set_colorkey(ALPHA_COLOUR, pygame.RLEACCEL)
@@ -46,6 +47,9 @@ class menu_scene(object):
 
     def resume(self):
         pass
+
+    def end(self):
+        self.finished = True
 
     def handle_input(self, events, pressed_keys):
         for event in events:

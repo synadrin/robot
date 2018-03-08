@@ -1,5 +1,6 @@
 # Scene class components:
 # ._manager
+# .finished
 # .pause()
 # .resume()
 # .handle_input(events, pressed_keys)
@@ -29,7 +30,19 @@ class scene_manager(object):
         self.pop()
         self.append(value)
 
-    def draw_all(self, surface):
+    def update(self, dt):
+        cleanup_complete = False
+        while not cleanup_complete:
+            if self.current_scene and not self.current_scene.finished:
+                self.current_scene.update(dt)
+                cleanup_complete = True
+            elif self.current_scene and self.current_scene.finished:
+                self.pop()
+            else:
+                cleanup_complete = True
+
+    def draw(self, surface):
+        # Draw all scenes (from bottom to top)
         surface.fill((0, 0, 0))
         for scene in self._scenes:
             scene.draw(surface)
