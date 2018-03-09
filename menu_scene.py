@@ -66,7 +66,7 @@ class menu_scene(object):
         pass
 
     def draw_cursor(self, surface):
-        rect = pygame.Rect(self.rect)
+        rect = rect_adjustment(surface, self.rect)
         rect.x += TEXT_SIZE / 2
         rect.y += (self.active_choice_index + 1) * TEXT_SIZE
         pygame.draw.polygon(surface, TEXT_COLOUR,

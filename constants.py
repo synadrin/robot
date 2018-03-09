@@ -11,7 +11,7 @@ DISPLAY_FBDEV = '/dev/fb0'
 TARGET_FPS = 120
 
 START_MENU_IMAGE = 'robie-power-on.png'
-START_MENU_RECT = (0, 0, 200, 200)
+START_MENU_RECT = (0.375, 0.625, 0.25, 0.25)
 
 CREDITS_FILE = 'credits.txt'
 

@@ -88,6 +88,7 @@ class game_engine(object):
                     )
 
             elif event.type == pygame.JOYBUTTONDOWN:
+                # TODO: Parse joystick input
                 pass
 
             event = poll()

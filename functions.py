@@ -122,7 +122,7 @@ def draw_text(surface, rect, text_list, colour):
     rect = rect_adjustment(surface, rect)
 
     y = rect.y + TEXT_SIZE
-    x = TEXT_SIZE
+    x = rect.x + TEXT_SIZE
     font = pygame.font.Font(pygame.font.get_default_font(), TEXT_SIZE)
 
     for line in text_list:
