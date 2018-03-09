@@ -11,15 +11,14 @@ import spritesheet
 import character
 import trigger
 import pathfinding
+import text_scene
 
 
 class game_scene(object):
     def __init__(self, manager, engine):
         self._manager = manager
+        self.finished = False
         self._engine = engine
-
-        # True when waiting on the player input (dialogue, menu, etc)
-        self._waiting = False
 
         # Load images for UI
         self._ui_spritesheet = spritesheet.spritesheet('ui.png')
@@ -140,13 +139,32 @@ class game_scene(object):
             if index > -1:
                 trigger = self.triggers[index]
                 if trigger.on_interact == 'message':
-                    self.display_text(trigger.message_text)
+                    message_box = (
+                        0, 1 - DIALOG_HEIGHT,
+                        1, DIALOG_HEIGHT
+                    )
+                    self._manager.append(
+                        text_scene.text_scene(
+                            self._manager,
+                            trigger.message_text,
+                            message_box
+                        )
+                    )
                 elif trigger.on_interact == 'load_map':
                     self.load_map(
                         trigger.map_name,
                         trigger.entrance_name,
                         self._engine.screen.get_size()
                     )
+
+    def pause(self):
+        pass
+
+    def resume(self):
+        pass
+
+    def end(self):
+        self.finished = True
 
     def draw_text(self, surface):
         if self._text_set:
@@ -188,55 +206,30 @@ class game_scene(object):
                 self._ui_images[0], (x, y)
             )
 
-    def display_text(self, text):
-        self._waiting = True
-        if isinstance(text, list):
-            self._text_set = text
-        else:
-            self._text_set = [text]
-
-    def clear_text(self):
-        self._waiting = False
-        self._text_set = None
-
-    def _button_action(self):
-        if self._waiting:
-            #TODO: Move to next action
-            self.clear_text()
-            if self._engine.hero.dead:
-                self.running = False
-        else:
-            self.interaction()
+    def game_over(self):
+        self.end()
+        message_box = (
+            0, 1 - DIALOG_HEIGHT,
+            1, DIALOG_HEIGHT
+        )
+        self._manager.append(
+            text_scene.text_scene(
+                self._manager,
+                ["GAME OVER", ":[ :[ :[ :["],
+                message_box
+            )
+        )
 
     def _button_attack(self):
         self._engine.hero.attack()
 
-    def _button_up(self):
-        print("UP")
-
-    def _button_down(self):
-        print("DOWN")
-
-    def _button_left(self):
-        print("LEFT")
-
-    def _button_right(self):
-        print("RIGHT")
-
     def handle_input(self, events, pressed_keys):
-        poll = pygame.event.poll
-
-        event = poll()
-        while event:
-            if event.type == QUIT:
-                self.running = False
-                break
-
-            elif event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    self.running = False
-                    break
-
+        for event in events:
+            if event.type == R_INPUT_EVENT:
+                if event.button == buttons.R_A:
+                    self.interaction()
+                if event.button == buttons.R_B:
+                    self._button_attack()
 #                elif event.key == K_EQUALS:
 #                    self.map_layer.zoom += .25
 #
@@ -245,41 +238,30 @@ class game_scene(object):
 #                    if value > 0:
 #                        self.map_layer.zoom = value
 #
-#                elif event.key == K_SPACE:
-#                    self._button_action()
-#
-#                elif event.key == K_x:
-#                    self._button_attack()
-#
 #            # this will be handled if the window is resized
 #            elif event.type == VIDEORESIZE:
 #                scope.resize(event.w, event.h)
 #                self.map_layer.set_size((event.w, event.h))
 #
-            event = poll()
-#
-#        # using get_pressed is slightly less accurate than testing for events
-#        # but is much easier to use.
-#        if not self._waiting:
-#            pressed = pygame.key.get_pressed()
-#            if pressed[K_UP]:
-#                self._engine.hero.move_up()
-#            elif pressed[K_DOWN]:
-#                self._engine.hero.move_down()
-#            else:
-#                self._engine.hero.stop_moving_vertical()
-#
-#            if pressed[K_LEFT]:
-#                self._engine.hero.move_left()
-#            elif pressed[K_RIGHT]:
-#                self._engine.hero.move_right()
-#            else:
-#                self._engine.hero.stop_moving_horizontal()
+        # using get_pressed is slightly less accurate than testing for events
+        # but is much easier to use.
+        if pressed_keys[buttons.R_UP]:
+            self._engine.hero.move_up()
+        elif pressed_keys[buttons.R_DOWN]:
+            self._engine.hero.move_down()
+        else:
+            self._engine.hero.stop_moving_vertical()
+
+        if pressed_keys[buttons.R_LEFT]:
+            self._engine.hero.move_left()
+        elif pressed_keys[buttons.R_RIGHT]:
+            self._engine.hero.move_right()
+        else:
+            self._engine.hero.stop_moving_horizontal()
 
     def update(self, dt):
         """ Tasks that occur over time should be handled here
         """
-#                if not self._waiting:
         self.group.update(dt)
 
         # check if the sprite's feet are colliding with wall
@@ -313,6 +295,7 @@ class game_scene(object):
                     )
                 )
             enemy.threat_target = self._engine.hero.position
+
         # If the player is dead, game over
         if self._engine.hero.dead:
             self.game_over()
@@ -326,6 +309,3 @@ class game_scene(object):
 
         # Draw user interface
         self.draw_ui(surface)
-
-        # Draw text
-        self.draw_text(surface)

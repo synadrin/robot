@@ -64,10 +64,6 @@ class game_engine(object):
             )
         )
 
-    def game_over(self):
-        self.display_text(["GAME OVER",
-            ":[ :[ :[ :["])
-
     def handle_input(self):
         """ Handle pygame input events
         """

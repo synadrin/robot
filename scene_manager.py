@@ -3,6 +3,7 @@
 # .finished
 # .pause()
 # .resume()
+# .end()
 # .handle_input(events, pressed_keys)
 # .update(dt)
 # .draw(surface)
