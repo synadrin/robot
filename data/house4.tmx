@@ -35,7 +35,9 @@
   <object id="10" name="key" type="trigger" x="128" y="0" width="32" height="32">
    <properties>
     <property name="message_text" value="You found a key!"/>
-    <property name="on_interact" value="message"/>
+    <property name="on_interact" value="set"/>
+    <property name="value" value="&quot;key-door1&quot;"/>
+    <property name="variable_name" value="_engine.hero.add_item"/>
    </properties>
   </object>
  </objectgroup>

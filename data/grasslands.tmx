@@ -130,8 +130,11 @@
   </object>
   <object id="67" name="door1" type="trigger" x="384" y="256" width="32" height="32">
    <properties>
-    <property name="message_text" value="It's locked."/>
-    <property name="on_interact" value="message"/>
+    <property name="condition" value="&quot;key-door1&quot; in self._engine.hero.inventory"/>
+    <property name="entrance_name" value="in"/>
+    <property name="error_text" value="It's locked."/>
+    <property name="map_name" value="house1"/>
+    <property name="on_interact" value="load_map"/>
    </properties>
   </object>
   <object id="68" name="door1_out" type="entrance" x="384" y="288" width="32" height="32"/>
