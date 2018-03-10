@@ -150,8 +150,8 @@ keyboard_map = {
     pygame.K_RIGHT: buttons.R_RIGHT,
     pygame.K_DOWN: buttons.R_DOWN,
     pygame.K_LEFT: buttons.R_LEFT,
-    pygame.K_z: buttons.R_B,
-    pygame.K_x: buttons.R_A,
+    pygame.K_x: buttons.R_B,
+    pygame.K_SPACE: buttons.R_A,
     pygame.K_RETURN: buttons.R_START,
     pygame.K_RSHIFT: buttons.R_SELECT,
 }
