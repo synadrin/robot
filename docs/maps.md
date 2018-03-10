@@ -19,6 +19,7 @@ properties.
 * `Name` - The name of the object. This usually matches a resource filename.
 * `Type` - The type of object. See below for accepted types.
 * Custom Properties - These are specific to certain types.
+    * `condition`
     * `entrance_name`
     * `map_name`
     * `message_text`
@@ -27,6 +28,8 @@ properties.
     * `on_interact`
     * `target_x`
     * `target_y`
+    * `value`
+    * `variable_name`
 
 ### Object Types
 
@@ -77,7 +80,28 @@ properties.
 
 ### Actions
 
+    * `condition` - **not implemented**
 * `dialogue` - TODO
-* `message` - Displays the contents of `message_text` custom property.
-* `load_map` - Loads the map given in `map_name` and places the
-  player at the `entrance` named `entrance_name`.
+
+* `message` - Displays a message to the player.
+
+    Additional properties:
+
+    * `message_text` - The message to display.
+
+* `load_map` - Loads a new map.
+
+    Additional properties:
+
+    * `map_name` - The map to load.
+    * `entrance_name` - The name of the `entrance` on the map where
+      the player is placed.
+
+* `set` - Sets a property to a given value.
+
+    Additional properties:
+
+    * `variable_name` - The name of the variable to set.
+    * `value` - The new value of the named variable.  
+      **TODO**: Properties for specific tasks.
+    * `message_text` - The message to display.
