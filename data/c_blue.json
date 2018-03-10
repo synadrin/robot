@@ -1,0 +1,9 @@
+{
+	"name": "Blue Guard",
+	"spritesheet": "blue-spritesheet.png",
+	"move_speed": 0.50,
+	"frames_per_row": 4,
+	"dialogue": [
+		"Avoid the red soldiers. They've gone mad."
+	]
+}

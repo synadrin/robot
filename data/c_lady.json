@@ -4,7 +4,6 @@
 	"move_speed": 0.25,
 	"frames_per_row": 4,
 	"dialogue": [
-		"Oh, hello.",
-		"They say the cabin to the north holds a secret."
+		"They say the cabin to the far north holds some power."
 	]
 }
