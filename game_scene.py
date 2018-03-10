@@ -127,45 +127,48 @@ class game_scene(object):
                 self.enemies.append(enemy)
                 self.group.add(enemy)
 
+    def display_text(self, text):
+        message_box = (
+            0, 1 - DIALOG_HEIGHT,
+            1, DIALOG_HEIGHT
+        )
+        self._manager.append(
+            text_scene.text_scene(
+                self._manager,
+                text,
+                message_box
+            )
+        )
+
     def interaction(self):
         index = self._engine.hero.interaction_rect.collidelist(self.npcs)
         # NPC
         if index > -1:
-            message_box = (
-                0, 1 - DIALOG_HEIGHT,
-                1, DIALOG_HEIGHT
-            )
-            self._manager.append(
-                text_scene.text_scene(
-                    self._manager,
-                    self.npcs[index].name + ': '
-                        + self.npcs[index].dialogue,
-                    message_box
-                )
+            self.display_text(
+                self.npcs[index].name + ': '
+                    + self.npcs[index].dialogue
             )
         else:
             # Events, objects
             index = self._engine.hero.interaction_rect.collidelist(self.triggers)
             if index > -1:
                 trigger = self.triggers[index]
-                if trigger.on_interact == 'message':
-                    message_box = (
-                        0, 1 - DIALOG_HEIGHT,
-                        1, DIALOG_HEIGHT
-                    )
-                    self._manager.append(
-                        text_scene.text_scene(
-                            self._manager,
-                            trigger.message_text,
-                            message_box
+                if not trigger.condition or eval(trigger.condition):
+                    if trigger.on_interact == 'message':
+                        self.display_text(trigger.message_text)
+                    elif trigger.on_interact == 'load_map':
+                        self.load_map(
+                            trigger.map_name,
+                            trigger.entrance_name,
+                            self._engine.screen.get_size()
                         )
-                    )
-                elif trigger.on_interact == 'load_map':
-                    self.load_map(
-                        trigger.map_name,
-                        trigger.entrance_name,
-                        self._engine.screen.get_size()
-                    )
+                    elif trigger.on_interact == 'set':
+                        exec_string = 'self.' + trigger.variable_name \
+                            + ' = ' + trigger.value
+                        exec(exec_string)
+                        self.display_text(trigger.message_text)
+                else:
+                    self.display_text(trigger.error_text)
 
     def pause(self):
         pass
