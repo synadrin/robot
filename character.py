@@ -361,6 +361,9 @@ class player(character):
             ), ALPHA_COLOUR
         )
 
+        # Inventory
+        self.inventory = []
+
     @property
     def image(self):
         if self.invulnerable and int(self._invulnerability_timer * 10) % 2 == 0:
@@ -407,6 +410,14 @@ class player(character):
     @property
     def damage(self):
         return self.weapon.damage if self.weapon else 0
+
+    @property
+    def add_item(self):
+        return None
+
+    @add_item.setter
+    def add_item(self, item):
+        self.inventory.append(item)
 
     def update_interaction_rect(self):
         self.interaction_rect.topleft = self._position[:]
