@@ -78,7 +78,11 @@ class menu_scene(object):
             0)
 
     def draw(self, surface):
-        surface.blit(self.image, (0, 0))
+        img = pygame.transform.scale(
+            self.image,
+            (surface.get_width(), surface.get_height())
+        )
+        surface.blit(img, (0, 0))
         draw_text_box(surface, self.rect)
         active_text = []
         inactive_text = []
