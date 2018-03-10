@@ -131,8 +131,18 @@ class game_scene(object):
         index = self._engine.hero.interaction_rect.collidelist(self.npcs)
         # NPC
         if index > -1:
-            self.display_text(self.npcs[index].name + ': '
-                + self.npcs[index].dialogue)
+            message_box = (
+                0, 1 - DIALOG_HEIGHT,
+                1, DIALOG_HEIGHT
+            )
+            self._manager.append(
+                text_scene.text_scene(
+                    self._manager,
+                    self.npcs[index].name + ': '
+                        + self.npcs[index].dialogue,
+                    message_box
+                )
+            )
         else:
             # Events, objects
             index = self._engine.hero.interaction_rect.collidelist(self.triggers)
