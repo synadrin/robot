@@ -179,21 +179,6 @@ class game_scene(object):
     def end(self):
         self.finished = True
 
-    def draw_text(self, surface):
-        if self._text_set:
-            vertical_offset = surface.get_height() * (1 - DIALOG_HEIGHT)
-            dialog_box = pygame.Rect(0, vertical_offset, surface.get_width(), 
-                surface.get_height() * DIALOG_HEIGHT)
-            y = vertical_offset + TEXT_SIZE
-            x = TEXT_SIZE
-            font = pygame.font.Font(pygame.font.get_default_font(), TEXT_SIZE)
-
-            draw_text_box(surface, dialog_box)
-            for line in self._text_set:
-                text = font.render(line, 1, TEXT_COLOUR, TEXT_BACKGROUND)
-                surface.blit(text, (x, y))
-                y += text.get_height()
-
     def draw_ui(self, surface):
         # Health
         full_count = int(self._engine.hero.health / 2)
