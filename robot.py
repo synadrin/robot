@@ -7,6 +7,7 @@ import scene_manager
 import menu_scene
 import text_scene
 import game_scene
+import fade_scene
 import character
 
 
@@ -40,11 +41,19 @@ class game_engine(object):
 
     def new_game(self):
         self.hero = character.player(HERO_NAME)
-        self.scene_manager.append(game_scene.game_scene(
+        # New game_scene with default settings
+        new_game = game_scene.game_scene(
             self.scene_manager,
             self
+        )
+        ## Properly initialise the scene under the fade
+        new_game.update(0)
+        self.scene_manager.append(new_game)
+        # Fade in
+        self.scene_manager.append(fade_scene.fade_scene(
+            self.scene_manager,
+            FADE_TIME, FADE_COLOUR
         ))
-        # New game_scene with default settings
 
     def load_game(self, save_name):
         # Load character data from saved game
