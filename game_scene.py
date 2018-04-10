@@ -161,12 +161,17 @@ class game_scene(object):
                     if trigger.on_interact == 'message':
                         self.display_text(trigger.message_text)
                     elif trigger.on_interact == 'load_map':
-                        # Fade out/in ??
-                        self.load_map(
+                        new_map = game_scene(
+                            self._manager,
+                            self._engine,
                             trigger.map_name,
-                            trigger.entrance_name,
-                            self._engine.screen.get_size()
+                            trigger.entrance_name
                         )
+                        fade = fade_transition.fade_transition(
+                            self._manager,
+                            FADE_TIME, FADE_COLOUR
+                        )
+                        self._manager.change(new_map, fade)
                     elif trigger.on_interact == 'set':
                         exec_string = 'self.' + trigger.variable_name \
                             + ' = ' + trigger.value
