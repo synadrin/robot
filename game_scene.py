@@ -12,6 +12,7 @@ import character
 import trigger
 import pathfinding
 import text_scene
+import menu_scene
 import fade_transition
 
 
@@ -214,6 +215,16 @@ class game_scene(object):
                 self._ui_images[0], (x, y)
             )
 
+    def pause_menu(self):
+        pause_menu = menu_scene.menu_scene(
+            self._manager,
+            PAUSE_MENU_IMAGE, PAUSE_MENU_RECT
+        )
+        pause_menu.append("Resume Game", True, pause_menu.end)
+        pause_menu.append("Quit", True,
+            lambda: pygame.event.post(pygame.event.Event(pygame.QUIT)))
+        self._manager.append(pause_menu)
+
     def game_over(self):
         self.end()
         message_box = (
@@ -238,6 +249,8 @@ class game_scene(object):
                     self.interaction()
                 if event.button == buttons.R_B:
                     self._button_attack()
+                if event.button == buttons.R_START:
+                    self.pause_menu()
 #                elif event.key == K_EQUALS:
 #                    self.map_layer.zoom += .25
 #
