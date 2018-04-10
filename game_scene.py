@@ -12,7 +12,7 @@ import character
 import trigger
 import pathfinding
 import text_scene
-import fade_scene
+import fade_transition
 
 
 class game_scene(object):

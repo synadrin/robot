@@ -44,5 +44,5 @@ WEAPON_SPEED_MAX = 10
 WEAPON_SPEED_SLOWEST = 1.0  # Seconds
 WEAPON_SPEED_FASTEST = 0.1  # Seconds
 
-FADE_TIME = 0.5  # Seconds
+FADE_TIME = 1.0  # Seconds
 FADE_COLOUR = (0, 0, 0)  # Black

@@ -4,17 +4,23 @@ from constants import *
 from functions import *
 
 
-class fade_scene(object):
+class fade_transition(object):
     def __init__(self, manager, time, colour):
         self._manager = manager
         self.finished = False
         self._colour = colour
         self._max_time = time
         self._timer = time
+        self._fade_in = False
+        self.from_scene = None
+        self.to_scene = None
 
     @property
     def alpha(self):
-        alpha_value = 255 * (self._timer / self._max_time)
+        if self._fade_in:
+            alpha_value = 255 * (self._timer / self._max_time)
+        else:
+            alpha_value = 255 * (1 - (self._timer / self._max_time))
         return alpha_value
 
     def pause(self):
@@ -31,10 +37,20 @@ class fade_scene(object):
 
     def update(self, dt):
         self._timer -= dt
+        if self._timer <= (self._max_time / 2):
+            self._fade_in = True
         if self._timer <= 0:
             self.end()
 
     def draw(self, surface):
+        # Draw the scene under
+        if self._fade_in:
+            if self.to_scene:
+                self.to_scene.draw(surface)
+        else:
+            if self.from_scene:
+                self.from_scene.draw(surface)
+        # Draw the fade
         fade_surface = pygame.Surface(
             (surface.get_width(), surface.get_height())
         )

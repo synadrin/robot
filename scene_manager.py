@@ -1,12 +1,16 @@
 # Scene class components:
-# ._manager
-# .finished
-# .pause()
-# .resume()
-# .end()
-# .handle_input(events, pressed_keys)
-# .update(dt)
-# .draw(surface)
+## ._manager
+## .finished
+## .pause()
+## .resume()
+## .end()
+## .handle_input(events, pressed_keys)
+## .update(dt)
+## .draw(surface)
+
+# Transition class components (in addition to Scene):
+## .from_scene
+## .to_scene
 
 
 class scene_manager(object):
@@ -27,9 +31,15 @@ class scene_manager(object):
     def pop(self):
         return self._scenes.pop()
 
-    def change(self, value):
-        self.pop()
-        self.append(value)
+    def change(self, value, transition = None):
+        if transition:
+            transition.from_scene = self.pop()
+            transition.to_scene = value
+            self.append(value)
+            self.append(transition)
+        else:
+            self.pop()
+            self.append(value)
 
     def update(self, dt):
         cleanup_complete = False

@@ -7,7 +7,7 @@ import scene_manager
 import menu_scene
 import text_scene
 import game_scene
-import fade_scene
+import fade_transition
 import character
 
 
@@ -44,16 +44,18 @@ class game_engine(object):
         # New game_scene with default settings
         new_game = game_scene.game_scene(
             self.scene_manager,
-            self
+            self,
+            DEFAULT_MAP,
+            MAP_ENTRANCE
         )
-        ## Properly initialise the scene under the fade
-        new_game.update(0)
-        self.scene_manager.append(new_game)
-        # Fade in
-        self.scene_manager.append(fade_scene.fade_scene(
+
+        # Fade transition
+        fade = fade_transition.fade_transition(
             self.scene_manager,
             FADE_TIME, FADE_COLOUR
-        ))
+        )
+
+        self.scene_manager.change(new_game, fade)
 
     def load_game(self, save_name):
         # Load character data from saved game
