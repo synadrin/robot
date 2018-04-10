@@ -129,6 +129,10 @@ class game_scene(object):
                 self.enemies.append(enemy)
                 self.group.add(enemy)
 
+        # Play background music
+        if 'background_music' in tmx_data.properties:
+            self._engine.play_music(tmx_data.properties['background_music'])
+
         # Initialise map
         self.update(0)
 

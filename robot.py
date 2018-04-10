@@ -26,6 +26,9 @@ class game_engine(object):
         # Main drawing area
         self.screen = screen
 
+        self._background_music = None
+
+        # Scene Manager
         self.scene_manager = scene_manager.scene_manager()
         start_menu = menu_scene.menu_scene(scene_manager,
             START_MENU_IMAGE, START_MENU_RECT)
@@ -38,6 +41,16 @@ class game_engine(object):
         self.scene_manager.append(start_menu)
 
         self.hero = None
+
+    # Audio
+    def play_music(self, name):
+        if name != self._background_music:
+            self._background_music = name
+            pygame.mixer.music.load(get_resource_name(name + '.ogg'))
+            pygame.mixer.music.play(-1)
+
+    def play_sound(self, name):
+        pass
 
     def new_game(self):
         self.hero = character.player(HERO_NAME)
@@ -146,6 +159,7 @@ class game_engine(object):
 def main():
     pygame.init()
     pygame.font.init()
+    pygame.mixer.init()
     scope = pyscope.pyscope()
     pygame.display.set_caption(DISPLAY_NAME + ' v' + GAME_VERSION)
 
