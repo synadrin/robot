@@ -12,10 +12,11 @@ import character
 import trigger
 import pathfinding
 import text_scene
+import fade_scene
 
 
 class game_scene(object):
-    def __init__(self, manager, engine):
+    def __init__(self, manager, engine, map_name, entrance_name):
         self._manager = manager
         self.finished = False
         self._engine = engine
@@ -27,10 +28,10 @@ class game_scene(object):
             ALPHA_COLOUR
         )
 
-        # Load the default map
+        # Load the map
         self.load_map(
-            DEFAULT_MAP,
-            MAP_ENTRANCE,
+            map_name,
+            entrance_name,
             self._engine.screen.get_size()
         )
 
@@ -127,6 +128,9 @@ class game_scene(object):
                 self.enemies.append(enemy)
                 self.group.add(enemy)
 
+        # Initialise map
+        self.update(0)
+
     def display_text(self, text):
         message_box = (
             0, 1 - DIALOG_HEIGHT,
@@ -157,6 +161,7 @@ class game_scene(object):
                     if trigger.on_interact == 'message':
                         self.display_text(trigger.message_text)
                     elif trigger.on_interact == 'load_map':
+                        # Fade out/in ??
                         self.load_map(
                             trigger.map_name,
                             trigger.entrance_name,
