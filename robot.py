@@ -50,7 +50,8 @@ class game_engine(object):
             pygame.mixer.music.play(-1)
 
     def play_sound(self, name):
-        pass
+        sound = pygame.mixer.Sound(get_resource_name(name + '.wav'))
+        sound.play()
 
     def new_game(self):
         self.hero = character.player(HERO_NAME)
