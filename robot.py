@@ -38,6 +38,7 @@ class game_engine(object):
         start_menu.append("Quit", True,
             lambda: pygame.event.post(pygame.event.Event(pygame.QUIT)))
 
+        self.play_music(START_MENU_MUSIC)
         self.scene_manager.append(start_menu)
 
         self.hero = None

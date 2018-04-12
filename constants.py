@@ -12,6 +12,7 @@ TARGET_FPS = 120
 
 START_MENU_IMAGE = 'start-screen.png'
 START_MENU_RECT = (0.375, 0.625, 0.25, 0.25)
+START_MENU_MUSIC = 'Sonic_CD_The_Jazzy_Cosmos_OC_ReMix'
 
 PAUSE_MENU_IMAGE = 'pause-screen.png'
 PAUSE_MENU_RECT = (0.25, 0.4, 0.5, 0.2)
